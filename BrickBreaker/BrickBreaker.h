@@ -7,8 +7,7 @@
 
 class BrickBreaker : public Game {
 private:
-	//TODO (Logan) -> Change array to a vector
-	GameObject* _gameObjects [2];
+	std::vector<GameObject*> _gameObjects;
 
 public:
 	BrickBreaker();

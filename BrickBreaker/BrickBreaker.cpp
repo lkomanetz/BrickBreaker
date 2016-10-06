@@ -4,9 +4,9 @@ BrickBreaker::BrickBreaker() {
 }
 
 BrickBreaker::~BrickBreaker() {
-	UINT arraySize = sizeof(_gameObjects) / sizeof(GameObject*);
-	for (UINT i = 0; i < arraySize; i++) {
-		delete _gameObjects[i];
+	std::vector<GameObject*>::iterator iter;
+	for (iter = _gameObjects.begin(); iter != _gameObjects.end(); iter++) {
+		delete (*iter);
 	}
 }
 
@@ -26,8 +26,8 @@ void BrickBreaker::initialize(HWND hwnd) {
 	_planet->setX(GAME_WIDTH * 0.5f - _planet->getWidth() * 0.5f);
 	_planet->setY(GAME_HEIGHT * 0.5f - _planet->getHeight() * 0.5f);
 
-	_gameObjects[0] = _nebula;
-	_gameObjects[1] = _planet;
+	_gameObjects.push_back(_nebula);
+	_gameObjects.push_back(_planet);
 	return;
 }
 
@@ -42,9 +42,9 @@ void BrickBreaker::performAi() {
 void BrickBreaker::render() {
 	p_graphics->spriteBegin();
 
-	UINT arrayLength = sizeof(_gameObjects) / sizeof(GameObject*);
-	for (UINT i = 0; i < arrayLength; i++) {
-		_gameObjects[i]->draw();
+	std::vector<GameObject*>::iterator iter;
+	for (iter = _gameObjects.begin(); iter != _gameObjects.end(); iter++) {
+		(*iter)->draw();
 	}
 
 	p_graphics->spriteEnd();

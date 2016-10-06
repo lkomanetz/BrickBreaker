@@ -67,3 +67,4 @@ sites
 /[Dd]ebug/*
 /[Rr]elease/*
 *.db
+*.opendb
