@@ -1,0 +1,10 @@
+﻿  WinMain.cpp
+  TextureManager.cpp
+  Input.cpp
+  GameObject.cpp
+  Graphics.cpp
+  Game.cpp
+  BrickBreaker.cpp
+  Generating Code...
+  BrickBreaker.vcxproj -> C:\Code\BrickBreaker\Debug\BrickBreaker.exe
+  BrickBreaker.vcxproj -> C:\Code\BrickBreaker\Debug\BrickBreaker.pdb (Partial PDB)
