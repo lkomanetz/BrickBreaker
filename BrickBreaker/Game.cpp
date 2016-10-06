@@ -25,7 +25,7 @@ Game::~Game() {
 	deleteAll();
 }
 
-HRESULT Game::messageHandler(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+LRESULT Game::messageHandler(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	if (!_initialized) {
 		return DefWindowProc(hwnd, msg, wParam, lParam);
 	}

@@ -13,15 +13,8 @@ BrickBreaker::~BrickBreaker() {
 void BrickBreaker::initialize(HWND hwnd) {
 	Game::initialize(hwnd);
 
-	GameObject* _nebula = new GameObject();
-	GameObject* _planet = new GameObject();
-
-	if (!_nebula->initialize(p_graphics, 0, 0, 0, NEBULA_IMAGE)) {
-		throw GameError(GameErrorNS::FATAL_ERROR, "Error initializing nebula image.");
-	}
-	if (!_planet->initialize(p_graphics, 0, 0, 0, PLANET_IMAGE)) {
-		throw GameError(GameErrorNS::FATAL_ERROR, "Error initializing planet image.");
-	}
+	GameObject* _nebula = new GameObject(p_graphics, 0, 0, 0, NEBULA_IMAGE);
+	GameObject* _planet = new GameObject(p_graphics, 0, 0, 0, PLANET_IMAGE);
 
 	_planet->setX(GAME_WIDTH * 0.5f - _planet->getWidth() * 0.5f);
 	_planet->setY(GAME_HEIGHT * 0.5f - _planet->getHeight() * 0.5f);

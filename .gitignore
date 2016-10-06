@@ -64,7 +64,8 @@ sites
 
 #Visual Studio
 /.vs/*
-/[Dd]ebug/*
-/[Rr]elease/*
+BrickBreaker/[Dd]ebug/**
+BrickBreaker/[Rr]elease/**
 *.db
 *.opendb
+**/x64/**

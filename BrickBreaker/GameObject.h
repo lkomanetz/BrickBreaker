@@ -23,11 +23,13 @@ private:
 	bool _initialized;
 	bool _animationComplete;
 
+	bool initialize(Graphics* p_graphics, int width, int height, int ncols, const char* fileLocation);
+	void construct();
 public:
 	GameObject();
+	GameObject(Graphics* pGraphics, int width, int height, int ncols, const char* fileLocation);
 	virtual ~GameObject();
 
-	bool initialize(Graphics* p_graphics, int width, int height, int ncols, const char* fileLocation);
 	virtual void draw(COLOR_ARGB color = GraphicsNS::WHITE);
 	virtual void draw(SpriteData spriteData, COLOR_ARGB color = GraphicsNS::WHITE);
 	virtual void update(float frameTime);

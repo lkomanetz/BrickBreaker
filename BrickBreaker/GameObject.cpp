@@ -1,19 +1,32 @@
 #include "GameObject.h"
 
-GameObject::GameObject() : 
-	_initialized(false),
-	_columns(1),
-	p_textureManager(NULL),
-	_startFrame(0),
-	_endFrame(0),
-	_currentFrame(0),
-	_frameDelay(1.0),
-	_animationTimer(0.0),
-	_visible(true),
-	_loop(true),
-	_animationComplete(false),
-	p_graphics(NULL),
-	_colorFilter(GraphicsNS::WHITE) {
+GameObject::GameObject() {
+	this->construct();
+}
+
+GameObject::GameObject(Graphics* pGraphics, int width, int height, int ncols, const char* fileLocation) {
+	this->construct();
+	this->initialize(pGraphics, width, height, ncols, fileLocation);
+}
+
+GameObject::~GameObject() { }
+
+void GameObject::update(float frameTime) {}
+
+void GameObject::construct() {
+	_initialized = false;
+	_columns = 1;
+	p_textureManager = NULL;
+	_startFrame = 0;
+	_endFrame = 0;
+	_currentFrame = 0;
+	_frameDelay = 1.0;
+	_animationTimer = 0.0;
+	_visible = true;
+	_loop = true;
+	_animationComplete = false;
+	p_graphics = NULL;
+	_colorFilter = GraphicsNS::WHITE;
 
 	_spriteData.width = 2;
 	_spriteData.height = 2;
@@ -29,10 +42,6 @@ GameObject::GameObject() :
 	_spriteData.isVerticalFlipped = false;
 	_spriteData.isHorizontalFlipped = false;
 }
-
-GameObject::~GameObject() { }
-
-void GameObject::update(float frameTime) {}
 
 bool GameObject::initialize(Graphics* graphics, int width, int height, int ncols, const char* fileLocation) {
 	try {
