@@ -4,3 +4,5 @@
 Brick::Brick() {
 	construct();
 }
+
+Brick::~Brick() {}

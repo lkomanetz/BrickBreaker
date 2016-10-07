@@ -53,7 +53,7 @@ void BrickBreaker::render() {
 		(*iter)->draw();
 	}
 
-	float startX = 15.0f;
+	float startX = 20.0f;
 	float brickWidth = _objects[0][0].getWidth();
 	float brickHeight = _objects[0][0].getHeight();
 	float brickX = startX;
