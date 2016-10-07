@@ -69,3 +69,5 @@ BrickBreaker/[Rr]elease/**
 *.db
 *.opendb
 **/x64/**
+[Dd]ebug/**
+[Rr]elease/**
