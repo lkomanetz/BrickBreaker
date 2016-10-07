@@ -23,8 +23,10 @@ private:
 	bool _initialized;
 	bool _animationComplete;
 
+protected:
 	bool initialize(Graphics* p_graphics, int width, int height, int ncols, const char* fileLocation);
 	void construct();
+
 public:
 	GameObject();
 	GameObject(Graphics* pGraphics, int width, int height, int ncols, const char* fileLocation);

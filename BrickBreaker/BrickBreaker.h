@@ -8,6 +8,7 @@
 class BrickBreaker : public Game {
 private:
 	std::vector<GameObject*> _gameObjects;
+	GameObject** _objects;
 
 public:
 	BrickBreaker();

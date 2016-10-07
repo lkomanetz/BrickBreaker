@@ -1,6 +1,12 @@
 #include "BrickBreaker.h"
 
+using namespace std;
+
 BrickBreaker::BrickBreaker() {
+	_objects = new GameObject*[8];
+	for (UINT i = 0; i < 8; i++) {
+		_objects[i] = new GameObject[8];
+	}
 }
 
 BrickBreaker::~BrickBreaker() {
@@ -19,12 +25,15 @@ void BrickBreaker::initialize(HWND hwnd) {
 
 	_planet->setX(GAME_WIDTH * 0.5f - _planet->getWidth() * 0.5f);
 	_planet->setY(GAME_HEIGHT * 0.5f - _planet->getHeight() * 0.5f);
-	_brick->setX(((GAME_WIDTH * 0.5F) - 1.0F) - _brick->getWidth() * 0.5f);
-	_brick->setY(((GAME_HEIGHT * 0.5F) - 1.0F) - _brick->getHeight() * 0.5f);
 
 	_gameObjects.push_back(_nebula);
 	_gameObjects.push_back(_planet);
-	_gameObjects.push_back(_brick);
+
+	for (UINT i = 0; i < 8; i++) {
+		for (UINT j = 0; j < 8; j++) {
+			_objects[i][j] = GameObject(p_graphics, 0, 0, 0, BRICK_IMAGE);
+		}
+	}
 	return;
 }
 
@@ -44,6 +53,22 @@ void BrickBreaker::render() {
 		(*iter)->draw();
 	}
 
+	float startX = 15.0f;
+	float brickWidth = _objects[0][0].getWidth();
+	float brickHeight = _objects[0][0].getHeight();
+	float brickX = startX;
+	float brickY = 0.0f;
+	for (UINT i = 0; i < 8; i++) {
+		for (UINT j = 0; j < 8; j++) {
+			_objects[i][j].setX(brickX);
+			_objects[i][j].setY(brickY);
+			_objects[i][j].draw();
+			brickX += brickWidth;
+		}
+		brickY += brickHeight;
+		brickX = startX;
+	}
+
 	p_graphics->spriteEnd();
 
 	return;
@@ -54,9 +79,9 @@ void BrickBreaker::calculateCollisions() {
 }
 
 void BrickBreaker::releaseAll() {
-	UINT arraySize = sizeof(_gameObjects) / sizeof(GameObject*);
-	for (UINT i = 0; i < arraySize; i++) {
-		_gameObjects[i]->getTextureManager()->onLostDevice();
+	vector<GameObject*>::iterator iter;
+	for (iter = _gameObjects.begin(); iter != _gameObjects.end(); iter++) {
+		(*iter)->getTextureManager()->onLostDevice();
 	}
 	Game::releaseAll();
 
@@ -64,9 +89,9 @@ void BrickBreaker::releaseAll() {
 }
 
 void BrickBreaker::resetAll() {
-	UINT arraySize = sizeof(_gameObjects) / sizeof(GameObject*);
-	for (UINT i = 0; i < arraySize; i++) {
-		_gameObjects[i]->getTextureManager()->onResetDevice();
+	vector<GameObject*>::iterator iter;
+	for (iter = _gameObjects.begin(); iter != _gameObjects.end(); iter++) {
+		(*iter)->getTextureManager()->onResetDevice();
 	}
 	Game::resetAll();
 
