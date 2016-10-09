@@ -3,12 +3,13 @@
 #define _BRICKBREAKER_H
 #include "Game.h"
 #include "GameObject.h"
+#include "Brick.h"
 #include <vector>
 
 class BrickBreaker : public Game {
 private:
 	std::vector<GameObject*> _gameObjects;
-	GameObject** _objects;
+	Brick*** _objects;
 
 public:
 	BrickBreaker();
