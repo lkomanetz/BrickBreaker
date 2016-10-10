@@ -4,10 +4,6 @@
 using namespace std;
 
 BrickBreaker::BrickBreaker() {
-	_objects = new Brick**[8];
-	for (UINT i = 0; i < 8; i++) {
-		_objects[i] = new Brick*[8];
-	}
 }
 
 BrickBreaker::~BrickBreaker() {
@@ -35,19 +31,8 @@ void BrickBreaker::initialize(HWND hwnd) {
 
 	_gameObjects.push_back(_nebula);
 	_gameObjects.push_back(_planet);
-
 	
-	for (UINT i = 0; i < 8; i++) {
-		for (UINT j = 0; j < 8; j++) {
-			_objects[i][j] = new Brick(p_graphics);
-			if ((j % 2) == 0) {
-				_objects[i][j]->setBrickType(BrickType::NoBrick);
-			}
-			else {
-				_objects[i][j]->setBrickType(BrickType::Normal);
-			}
-		}
-	}
+	loadLevelFromFile();
 	return;
 }
 
@@ -112,4 +97,30 @@ void BrickBreaker::resetAll() {
 	Game::resetAll();
 
 	return;
+}
+
+//TODO(Logan) -> Create a file with stages and levels to load the 'fileContents' from.
+void BrickBreaker::loadLevelFromFile() {
+	std::string fileContents = "01102320\n03321020\n00211320\n00022111\n11102233\n20031111\n11122330\n00022111";
+	UINT size = fileContents.size();
+	UINT brickRow = 0;
+	UINT brickCol = 0;
+	_objects = new Brick**[8];
+	_objects[brickRow] = new Brick*[8];
+
+	for (UINT i = 0; i < size; i++) {
+		if (fileContents[i] == '\n') {
+			brickRow++;
+			brickCol = 0;
+			_objects[brickRow] = new Brick*[8];
+			continue;
+		}
+
+		Brick* brick = new Brick(p_graphics);
+
+		BrickType type = static_cast<BrickType>(fileContents[i] - '0');
+		brick->setBrickType(type);
+		_objects[brickRow][brickCol] = brick;
+		brickCol++;
+	}
 }

@@ -11,6 +11,7 @@ private:
 	std::vector<GameObject*> _gameObjects;
 	Brick*** _objects;
 
+	void loadLevelFromFile();
 public:
 	BrickBreaker();
 	virtual ~BrickBreaker();
