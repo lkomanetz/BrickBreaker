@@ -100,6 +100,20 @@ void BrickBreaker::resetAll() {
 }
 
 //TODO(Logan) -> Create a file with stages and levels to load the 'fileContents' from.
+/* ==================
+ * Mock file contents
+ * ==================
+ * Level=1
+ * Name=Some Name
+ * 01102320
+ * 03321020
+ * 00211320
+ * 00022111
+ * 11102233
+ * 20031111
+ * 11122330
+ * 00022111
+ */
 void BrickBreaker::loadLevelFromFile() {
 	std::string fileContents = "01102320\n03321020\n00211320\n00022111\n11102233\n20031111\n11122330\n00022111";
 	UINT size = fileContents.size();
