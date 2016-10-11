@@ -2,7 +2,7 @@
 
 Level::Level() :
 	_number(0),
-	_content(""),
+	_brickLayout(""),
 	_name("") {
 }
 

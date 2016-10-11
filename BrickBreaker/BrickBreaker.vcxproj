@@ -135,6 +135,7 @@
   <ItemGroup>
     <ClCompile Include="Brick.cpp" />
     <ClCompile Include="BrickBreaker.cpp" />
+    <ClCompile Include="FileReader.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="GameObject.cpp" />
@@ -147,6 +148,7 @@
     <ClInclude Include="Brick.h" />
     <ClInclude Include="BrickBreaker.h" />
     <ClInclude Include="Constants.h" />
+    <ClInclude Include="FileReader.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameError.h" />
     <ClInclude Include="Graphics.h" />

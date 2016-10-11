@@ -8,17 +8,17 @@ class Level {
 private:
 	std::string _name;
 	int _number;
-	std::string _content;
+	std::string _brickLayout;
 
 public:
 	Level();
 	virtual ~Level();
 	void setName(std::string newName) { _name = newName; }
 	void setNumber(int newNumber) { _number = newNumber; }
-	void setContent(std::string newContent) { _content = newContent; }
+	void setBrickLayout(std::string newContent) { _brickLayout = newContent; }
 	std::string getName() { return _name; }
 	int getNumber() { return _number; }
-	std::string getContent() { return _content; }
+	std::string getBrickLayout() { return _brickLayout; }
 
 };
 

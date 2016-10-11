@@ -1,5 +1,4 @@
 #include "BrickBreaker.h"
-#include <exception>
 
 using namespace std;
 
@@ -104,16 +103,8 @@ void BrickBreaker::resetAll() {
 //TODO(Logan) -> Refactor the file IO code
 void BrickBreaker::loadLevelFromFile() {
 	std::string fileName = "stages/" + std::to_string(_stage) + ".txt";
-	ifstream iStream(fileName);
-	if (!iStream) {
-		throw GameError(GameErrorNS::FATAL_ERROR, "Unable to open file '" + fileName + "'.");
-	}
-
-	vector<string> fileContent;
-	string line;
-	while (getline(iStream, line)) {
-		fileContent.push_back(line);
-	}
+	FileReader fReader(fileName);
+	vector<string> fileContent = fReader.getContents();
 
 	Level level;
 	vector<string>::iterator iter;
@@ -129,11 +120,11 @@ void BrickBreaker::loadLevelFromFile() {
 			level.setName(propertyValue);
 		}
 		else if (propertyName == "Content") {
-			level.setContent(propertyValue);
+			level.setBrickLayout(propertyValue);
 		}
 	}
 
-	string levelContent = level.getContent();
+	string levelContent = level.getBrickLayout();
 	UINT size = levelContent.size();
 	UINT brickRow = 0;
 	UINT brickCol = 0;

@@ -5,9 +5,8 @@
 #include "GameObject.h"
 #include "Brick.h"
 #include "Level.h"
+#include "FileReader.h"
 #include <vector>
-#include <fstream>
-#include <stdio.h>
 
 class BrickBreaker : public Game {
 private:
