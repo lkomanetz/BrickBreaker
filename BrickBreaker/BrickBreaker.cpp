@@ -3,7 +3,9 @@
 
 using namespace std;
 
-BrickBreaker::BrickBreaker() {
+BrickBreaker::BrickBreaker() :
+	_stage(1) {
+
 }
 
 BrickBreaker::~BrickBreaker() {
@@ -99,31 +101,47 @@ void BrickBreaker::resetAll() {
 	return;
 }
 
-//TODO(Logan) -> Create a file with stages and levels to load the 'fileContents' from.
-/* ==================
- * Mock file contents
- * ==================
- * Level=1
- * Name=Some Name
- * 01102320
- * 03321020
- * 00211320
- * 00022111
- * 11102233
- * 20031111
- * 11122330
- * 00022111
- */
+//TODO(Logan) -> Refactor the file IO code
 void BrickBreaker::loadLevelFromFile() {
-	std::string fileContents = "01102320\n03321020\n00211320\n00022111\n11102233\n20031111\n11122330\n00022111";
-	UINT size = fileContents.size();
+	std::string fileName = "stages/" + std::to_string(_stage) + ".txt";
+	ifstream iStream(fileName);
+	if (!iStream) {
+		throw GameError(GameErrorNS::FATAL_ERROR, "Unable to open file '" + fileName + "'.");
+	}
+
+	vector<string> fileContent;
+	string line;
+	while (getline(iStream, line)) {
+		fileContent.push_back(line);
+	}
+
+	Level level;
+	vector<string>::iterator iter;
+	for (iter = fileContent.begin(); iter != fileContent.end(); ++iter) {
+		int position = (*iter).find("=");
+		string propertyName = (*iter).substr(0, position);
+		string propertyValue = (*iter).substr(++position, (*iter).length());
+
+		if (propertyName == "Level") {
+			level.setNumber(stoi(propertyValue));
+		}
+		else if (propertyName == "Name") {
+			level.setName(propertyValue);
+		}
+		else if (propertyName == "Content") {
+			level.setContent(propertyValue);
+		}
+	}
+
+	string levelContent = level.getContent();
+	UINT size = levelContent.size();
 	UINT brickRow = 0;
 	UINT brickCol = 0;
 	_objects = new Brick**[8];
 	_objects[brickRow] = new Brick*[8];
 
 	for (UINT i = 0; i < size; i++) {
-		if (fileContents[i] == '\n') {
+		if (levelContent[i] == ',') {
 			brickRow++;
 			brickCol = 0;
 			_objects[brickRow] = new Brick*[8];
@@ -132,7 +150,7 @@ void BrickBreaker::loadLevelFromFile() {
 
 		Brick* brick = new Brick(p_graphics);
 
-		BrickType type = static_cast<BrickType>(fileContents[i] - '0');
+		BrickType type = static_cast<BrickType>(levelContent[i] - '0');
 		brick->setBrickType(type);
 		_objects[brickRow][brickCol] = brick;
 		brickCol++;

@@ -4,12 +4,16 @@
 #include "Game.h"
 #include "GameObject.h"
 #include "Brick.h"
+#include "Level.h"
 #include <vector>
+#include <fstream>
+#include <stdio.h>
 
 class BrickBreaker : public Game {
 private:
 	std::vector<GameObject*> _gameObjects;
 	Brick*** _objects;
+	UINT _stage;
 
 	void loadLevelFromFile();
 public:
