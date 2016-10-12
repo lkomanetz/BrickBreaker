@@ -3,21 +3,20 @@
 using namespace std;
 
 BrickBreaker::BrickBreaker() :
-	_stage(1) {
+	_currentStage(1),
+	_currentLevel(1) {
 
 }
 
 BrickBreaker::~BrickBreaker() {
 	std::vector<GameObject*>::iterator iter;
-	for (iter = _gameObjects.begin(); iter != _gameObjects.end(); iter++) {
+	for (iter = _background.begin(); iter != _background.end(); iter++) {
 		delete (*iter);
 	}
 
-	for (UINT i = 0; i < 8; i++) {
-		for (UINT j = 0; j < 8; j++) {
-			safeDelete(_objects[i][j]);
-		}
-		safeDeleteArray(_objects[i]);
+	deleteCurrentLayout();
+	for (vector<Stage*>::iterator it = _stages.begin(); it != _stages.end(); ++it) {
+		delete (*it);
 	}
 }
 
@@ -30,10 +29,11 @@ void BrickBreaker::initialize(HWND hwnd) {
 	_planet->setX(GAME_WIDTH * 0.5f - _planet->getWidth() * 0.5f);
 	_planet->setY(GAME_HEIGHT * 0.5f - _planet->getHeight() * 0.5f);
 
-	_gameObjects.push_back(_nebula);
-	_gameObjects.push_back(_planet);
+	_background.push_back(_nebula);
+	_background.push_back(_planet);
 	
-	loadLevelFromFile();
+	loadStagesFromFile();
+	loadLevel();
 	return;
 }
 
@@ -49,7 +49,7 @@ void BrickBreaker::render() {
 	p_graphics->spriteBegin();
 
 	std::vector<GameObject*>::iterator iter;
-	for (iter = _gameObjects.begin(); iter != _gameObjects.end(); iter++) {
+	for (iter = _background.begin(); iter != _background.end(); iter++) {
 		(*iter)->draw();
 	}
 
@@ -82,7 +82,7 @@ void BrickBreaker::calculateCollisions() {
 
 void BrickBreaker::releaseAll() {
 	vector<GameObject*>::iterator iter;
-	for (iter = _gameObjects.begin(); iter != _gameObjects.end(); iter++) {
+	for (iter = _background.begin(); iter != _background.end(); iter++) {
 		(*iter)->getTextureManager()->onLostDevice();
 	}
 	Game::releaseAll();
@@ -92,7 +92,7 @@ void BrickBreaker::releaseAll() {
 
 void BrickBreaker::resetAll() {
 	vector<GameObject*>::iterator iter;
-	for (iter = _gameObjects.begin(); iter != _gameObjects.end(); iter++) {
+	for (iter = _background.begin(); iter != _background.end(); iter++) {
 		(*iter)->getTextureManager()->onResetDevice();
 	}
 	Game::resetAll();
@@ -100,13 +100,14 @@ void BrickBreaker::resetAll() {
 	return;
 }
 
-//TODO(Logan) -> Refactor the file IO code
-void BrickBreaker::loadLevelFromFile() {
-	std::string fileName = "stages/" + std::to_string(_stage) + ".txt";
+void BrickBreaker::loadStagesFromFile() {
+	std::string fileName = "stages/" + std::to_string(_currentStage) + ".txt";
 	FileReader fReader(fileName);
 	vector<string> fileContent = fReader.getContents();
 
 	Level level;
+	Stage* stage = new Stage();
+	stage->setNumber(1);
 	vector<string>::iterator iter;
 	for (iter = fileContent.begin(); iter != fileContent.end(); ++iter) {
 		int position = (*iter).find("=");
@@ -122,9 +123,26 @@ void BrickBreaker::loadLevelFromFile() {
 		else if (propertyName == "Content") {
 			level.setBrickLayout(propertyValue);
 		}
+		stage->addLevel(level);
+	}
+	_stages.push_back(stage);
+}
+
+void BrickBreaker::loadLevel() {
+	deleteCurrentLayout();
+	Stage* currentStage = new Stage();
+	vector<Stage*>::iterator iter;
+	for (iter = _stages.begin(); iter != _stages.end(); ++iter) {
+		if ((*iter)->getNumber() == _currentStage) {
+			currentStage = (*iter);
+		}
 	}
 
-	string levelContent = level.getBrickLayout();
+	Level* level = NULL;
+	level = currentStage->getLevel(_currentLevel);
+
+	//TODO(Logan) -> abstract this code into the Level class to pass back a Brick*** type.
+	string levelContent = level->getBrickLayout();
 	UINT size = levelContent.size();
 	UINT brickRow = 0;
 	UINT brickCol = 0;
@@ -145,5 +163,19 @@ void BrickBreaker::loadLevelFromFile() {
 		brick->setBrickType(type);
 		_objects[brickRow][brickCol] = brick;
 		brickCol++;
+	}
+
+}
+
+void BrickBreaker::deleteCurrentLayout() {
+	if (_objects == NULL) {
+		return;
+	}
+
+	for (UINT i = 0; i < 8; i++) {
+		for (UINT j = 0; j < 8; j++) {
+			safeDelete(_objects[i][j]);
+		}
+		safeDeleteArray(_objects[i]);
 	}
 }

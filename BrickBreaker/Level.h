@@ -4,6 +4,7 @@
 
 #include <string>
 
+//TODO(Logan) -> Refactor the names of brick layout
 class Level {
 private:
 	std::string _name;

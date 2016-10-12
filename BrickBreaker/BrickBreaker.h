@@ -5,16 +5,21 @@
 #include "GameObject.h"
 #include "Brick.h"
 #include "Level.h"
+#include "Stage.h"
 #include "FileReader.h"
 #include <vector>
 
 class BrickBreaker : public Game {
 private:
-	std::vector<GameObject*> _gameObjects;
+	std::vector<Stage*> _stages;
+	std::vector<GameObject*> _background;
 	Brick*** _objects;
-	UINT _stage;
+	UINT _currentStage;
+	UINT _currentLevel;
 
-	void loadLevelFromFile();
+	void loadLevel();
+	void loadStagesFromFile();
+	void deleteCurrentLayout();
 public:
 	BrickBreaker();
 	virtual ~BrickBreaker();
