@@ -22,8 +22,8 @@ public:
 	Brick(Graphics* pGraphics);
 	virtual ~Brick();
 
-	BrickType getBrickType() const { return _type; }
-	void setBrickType(const BrickType newType) { _type = newType; }
+	BrickType getType() const { return _type; }
+	void setType(const BrickType newType) { _type = newType; }
 };
 
 #endif

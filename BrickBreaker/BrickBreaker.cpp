@@ -22,25 +22,41 @@ BrickBreaker::~BrickBreaker() {
 void BrickBreaker::initialize(HWND hwnd) {
 	Game::initialize(hwnd);
 
-	GameObject* _nebula = new GameObject(p_graphics, 0, 0, 0, NEBULA_IMAGE);
-	GameObject* _planet = new GameObject(p_graphics, 0, 0, 0, PLANET_IMAGE);
+	GameObject* pNebula = new GameObject(p_graphics, 0, 0, 0, NEBULA_IMAGE);
+	GameObject* pPlanet = new GameObject(p_graphics, 0, 0, 0, PLANET_IMAGE);
 
-	_planet->setX(GAME_WIDTH * 0.5f - _planet->getWidth() * 0.5f);
-	_planet->setY(GAME_HEIGHT * 0.5f - _planet->getHeight() * 0.5f);
+	pPlanet->setX(GAME_WIDTH * 0.5f - pPlanet->getWidth() * 0.5f);
+	pPlanet->setY(GAME_HEIGHT * 0.5f - pPlanet->getHeight() * 0.5f);
 
-	_background.push_back(_nebula);
-	_background.push_back(_planet);
+	_background.push_back(pNebula);
+	_background.push_back(pPlanet);
 	
 	loadStagesFromFile();
 	loadLevel();
 	return;
 }
 
-//TODO(Logan) -> Make sure there are bounds checking
+//TODO(Logan) -> Refactor the code that changes levels and stages along with drawing it on the screen.
 void BrickBreaker::update() {
-	if (p_input->isKeyDown(NEXT_MAP)) {
-		_currentLevel++;
-		loadLevel();
+	if (p_input->wasKeyPressed(NEXT_MAP)) {
+		Stage* currentStage = getStage(_currentStage);
+		if (!currentStage) {
+			return;
+		}
+
+		int levelCount = currentStage->getLevelCount();
+		if (_currentLevel == levelCount) {
+			_currentLevel = 0;
+			_currentStage++;
+		}
+
+		if (_currentLevel < levelCount) {
+			_currentLevel++;
+		}
+
+		if (_currentLevel <= levelCount) {
+			loadLevel();
+		}
 	}
 	return;
 }
@@ -57,22 +73,8 @@ void BrickBreaker::render() {
 		(*iter)->draw();
 	}
 
-	float startX = 20.0f;
-	float brickWidth = p_currentLayout[0][0]->getWidth();
-	float brickHeight = p_currentLayout[0][0]->getHeight();
-	float brickX = startX;
-	float brickY = 0.0f;
-	for (UINT i = 0; i < 8; i++) {
-		for (UINT j = 0; j < 8; j++) {
-			if (p_currentLayout[i][j]->getBrickType() != BrickType::NoBrick) {
-				p_currentLayout[i][j]->setX(brickX);
-				p_currentLayout[i][j]->setY(brickY);
-				p_currentLayout[i][j]->draw();
-			}
-			brickX += brickWidth;
-		}
-		brickY += brickHeight;
-		brickX = startX;
+	if (p_currentLayout) {
+		drawBrickLayout();
 	}
 
 	p_graphics->spriteEnd();
@@ -109,6 +111,10 @@ void BrickBreaker::loadStagesFromFile() {
 	FileReader fReader(fileName);
 	vector<string> fileContent = fReader.getContents();
 
+	if (fileContent.size() == 0) {
+		return;
+	}
+
 	Level* level = NULL;
 	Stage* stage = new Stage();
 	stage->setNumber(1);
@@ -135,12 +141,10 @@ void BrickBreaker::loadStagesFromFile() {
 }
 
 void BrickBreaker::loadLevel() {
-	Stage* currentStage = new Stage();
-	vector<Stage*>::iterator iter;
-	for (iter = _stages.begin(); iter != _stages.end(); ++iter) {
-		if ((*iter)->getNumber() == _currentStage) {
-			currentStage = (*iter);
-		}
+	Stage* currentStage = getStage(_currentStage);
+	if (!currentStage) {
+		p_currentLayout = NULL;
+		return;
 	}
 
 	Level* pLevel = NULL;
@@ -150,4 +154,38 @@ void BrickBreaker::loadLevel() {
 		return;
 	}
 	p_currentLayout = pLevel->buildLayout();
+}
+
+Stage* BrickBreaker::getStage(int stageNumber) {
+	Stage* currentStage = NULL;
+	vector<Stage*>::iterator iter;
+	for (iter = _stages.begin(); iter != _stages.end(); ++iter) {
+		if ((*iter)->getNumber() == stageNumber) {
+			currentStage = (*iter);
+			break;
+		}
+	}
+
+	return currentStage;
+}
+
+void BrickBreaker::drawBrickLayout() {
+	float startX = 20.0f;
+	float brickWidth = p_currentLayout[0][0]->getWidth();
+	float brickHeight = p_currentLayout[0][0]->getHeight();
+	float brickX = startX;
+	float brickY = 0.0f;
+	for (UINT i = 0; i < 8; i++) {
+		for (UINT j = 0; j < 8; j++) {
+			Brick* brick = p_currentLayout[i][j];
+			if (brick->getType() != BrickType::NoBrick) {
+				brick->setX(brickX);
+				brick->setY(brickY);
+				brick->draw();
+			}
+			brickX += brickWidth;
+		}
+		brickY += brickHeight;
+		brickX = startX;
+	}
 }

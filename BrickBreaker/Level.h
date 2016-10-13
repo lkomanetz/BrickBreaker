@@ -6,13 +6,12 @@
 #include "Brick.h"
 #include "Graphics.h"
 
-//TODO(Logan) -> Refactor the names of brick layout
 class Level {
 private:
 	std::string _name;
 	int _number;
 	std::string _layoutString;
-	Brick*** _layout;
+	Brick*** p_brickLayout;
 	Graphics* p_graphics;
 
 	void construct();
