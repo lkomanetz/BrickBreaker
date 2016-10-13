@@ -5,6 +5,7 @@
 #include <vector>
 #include "Level.h"
 
+//TODO(Logan) -> Add an incrementing level count upon add.
 class Stage {
 private:
 	int _number;

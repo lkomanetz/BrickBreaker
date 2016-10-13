@@ -23,6 +23,9 @@ const float FRAME_RATE = 200.0f;
 const float MIN_FRAME_TIME = 1.0f / FRAME_RATE; // Minimum desired time for one frame
 const float MAX_FRAME_TIME = 1.0f / MIN_FRAME_TIME; // Maximum time used in game calculations
 
+// Key Mappings
+const UCHAR NEXT_MAP = VK_LEFT;
+
 template <typename T>
 inline void safeRelease(T& ptr) {
 	if (ptr) {

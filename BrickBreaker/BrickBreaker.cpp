@@ -14,7 +14,6 @@ BrickBreaker::~BrickBreaker() {
 		delete (*iter);
 	}
 
-	deleteCurrentLayout();
 	for (vector<Stage*>::iterator it = _stages.begin(); it != _stages.end(); ++it) {
 		delete (*it);
 	}
@@ -37,7 +36,12 @@ void BrickBreaker::initialize(HWND hwnd) {
 	return;
 }
 
+//TODO(Logan) -> Make sure there are bounds checking
 void BrickBreaker::update() {
+	if (p_input->isKeyDown(NEXT_MAP)) {
+		_currentLevel++;
+		loadLevel();
+	}
 	return;
 }
 
@@ -54,16 +58,16 @@ void BrickBreaker::render() {
 	}
 
 	float startX = 20.0f;
-	float brickWidth = _objects[0][0]->getWidth();
-	float brickHeight = _objects[0][0]->getHeight();
+	float brickWidth = p_currentLayout[0][0]->getWidth();
+	float brickHeight = p_currentLayout[0][0]->getHeight();
 	float brickX = startX;
 	float brickY = 0.0f;
 	for (UINT i = 0; i < 8; i++) {
 		for (UINT j = 0; j < 8; j++) {
-			if (_objects[i][j]->getBrickType() != BrickType::NoBrick) {
-				_objects[i][j]->setX(brickX);
-				_objects[i][j]->setY(brickY);
-				_objects[i][j]->draw();
+			if (p_currentLayout[i][j]->getBrickType() != BrickType::NoBrick) {
+				p_currentLayout[i][j]->setX(brickX);
+				p_currentLayout[i][j]->setY(brickY);
+				p_currentLayout[i][j]->draw();
 			}
 			brickX += brickWidth;
 		}
@@ -105,7 +109,7 @@ void BrickBreaker::loadStagesFromFile() {
 	FileReader fReader(fileName);
 	vector<string> fileContent = fReader.getContents();
 
-	Level level;
+	Level* level = NULL;
 	Stage* stage = new Stage();
 	stage->setNumber(1);
 	vector<string>::iterator iter;
@@ -115,21 +119,22 @@ void BrickBreaker::loadStagesFromFile() {
 		string propertyValue = (*iter).substr(++position, (*iter).length());
 
 		if (propertyName == "Level") {
-			level.setNumber(stoi(propertyValue));
+			level = new Level(p_graphics);
+			level->setNumber(stoi(propertyValue));
 		}
 		else if (propertyName == "Name") {
-			level.setName(propertyValue);
+			level->setName(propertyValue);
 		}
 		else if (propertyName == "Content") {
-			level.setBrickLayout(propertyValue);
+			level->setLayoutString(propertyValue);
+			stage->addLevel(*level);
+			delete level;
 		}
-		stage->addLevel(level);
 	}
 	_stages.push_back(stage);
 }
 
 void BrickBreaker::loadLevel() {
-	deleteCurrentLayout();
 	Stage* currentStage = new Stage();
 	vector<Stage*>::iterator iter;
 	for (iter = _stages.begin(); iter != _stages.end(); ++iter) {
@@ -138,44 +143,11 @@ void BrickBreaker::loadLevel() {
 		}
 	}
 
-	Level* level = NULL;
-	level = currentStage->getLevel(_currentLevel);
+	Level* pLevel = NULL;
+	pLevel = currentStage->getLevel(_currentLevel);
 
-	//TODO(Logan) -> abstract this code into the Level class to pass back a Brick*** type.
-	string levelContent = level->getBrickLayout();
-	UINT size = levelContent.size();
-	UINT brickRow = 0;
-	UINT brickCol = 0;
-	_objects = new Brick**[8];
-	_objects[brickRow] = new Brick*[8];
-
-	for (UINT i = 0; i < size; i++) {
-		if (levelContent[i] == ',') {
-			brickRow++;
-			brickCol = 0;
-			_objects[brickRow] = new Brick*[8];
-			continue;
-		}
-
-		Brick* brick = new Brick(p_graphics);
-
-		BrickType type = static_cast<BrickType>(levelContent[i] - '0');
-		brick->setBrickType(type);
-		_objects[brickRow][brickCol] = brick;
-		brickCol++;
-	}
-
-}
-
-void BrickBreaker::deleteCurrentLayout() {
-	if (_objects == NULL) {
+	if (!pLevel) {
 		return;
 	}
-
-	for (UINT i = 0; i < 8; i++) {
-		for (UINT j = 0; j < 8; j++) {
-			safeDelete(_objects[i][j]);
-		}
-		safeDeleteArray(_objects[i]);
-	}
+	p_currentLayout = pLevel->buildLayout();
 }

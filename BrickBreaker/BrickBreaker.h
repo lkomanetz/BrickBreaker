@@ -9,17 +9,17 @@
 #include "FileReader.h"
 #include <vector>
 
+//TODO(Logan) -> use "p" prefix for all pointers
 class BrickBreaker : public Game {
 private:
 	std::vector<Stage*> _stages;
 	std::vector<GameObject*> _background;
-	Brick*** _objects;
+	Brick*** p_currentLayout;
 	UINT _currentStage;
 	UINT _currentLevel;
 
 	void loadLevel();
 	void loadStagesFromFile();
-	void deleteCurrentLayout();
 public:
 	BrickBreaker();
 	virtual ~BrickBreaker();

@@ -3,23 +3,30 @@
 #define _LEVEL_H
 
 #include <string>
+#include "Brick.h"
+#include "Graphics.h"
 
 //TODO(Logan) -> Refactor the names of brick layout
 class Level {
 private:
 	std::string _name;
 	int _number;
-	std::string _brickLayout;
+	std::string _layoutString;
+	Brick*** _layout;
+	Graphics* p_graphics;
 
+	void construct();
 public:
 	Level();
+	Level(Graphics* pGraphics);
 	virtual ~Level();
 	void setName(std::string newName) { _name = newName; }
 	void setNumber(int newNumber) { _number = newNumber; }
-	void setBrickLayout(std::string newContent) { _brickLayout = newContent; }
+	void setLayoutString(std::string newContent) { _layoutString = newContent; }
 	std::string getName() { return _name; }
 	int getNumber() { return _number; }
-	std::string getBrickLayout() { return _brickLayout; }
+	std::string getLayoutString() { return _layoutString; }
+	Brick*** buildLayout();
 
 };
 
