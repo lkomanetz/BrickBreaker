@@ -13,13 +13,14 @@ class BrickBreaker : public Game {
 private:
 	std::vector<Stage*> _stages;
 	std::vector<GameObject*> _background;
-	Brick*** p_currentLayout;
+	Level* _level;
+	Stage* _stage;
 	UINT _currentStage;
 	UINT _currentLevel;
 
 	void loadLevel();
 	void loadStagesFromFile();
-	void drawBrickLayout();
+	void renderLevel();
 	Stage* getStage(int stageNumber);
 
 public:

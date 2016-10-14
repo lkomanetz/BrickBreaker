@@ -4,7 +4,7 @@ using namespace std;
 
 Stage::Stage() :
 	_number(0) {
-	_levels = new vector<Level>();
+	_levels = new vector<Level*>();
 }
 
 Stage::~Stage() {
@@ -14,10 +14,10 @@ Stage::~Stage() {
 Level* Stage::getLevel(int levelNumber) const {
 	Level* returnValue = NULL;
 
-	vector<Level>::iterator iter;
+	vector<Level*>::iterator iter;
 	for (iter = _levels->begin(); iter != _levels->end(); ++iter) {
-		if ((*iter).getNumber() == levelNumber) {
-			returnValue = &(*iter);
+		if ((*iter)->getNumber() == levelNumber) {
+			returnValue = (*iter);
 		}
 	}
 

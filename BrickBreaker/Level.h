@@ -15,17 +15,20 @@ private:
 	Graphics* p_graphics;
 
 	void construct();
+	void destructLayout();
+
 public:
 	Level();
 	Level(Graphics* pGraphics);
 	virtual ~Level();
 	void setName(std::string newName) { _name = newName; }
 	void setNumber(int newNumber) { _number = newNumber; }
-	void setLayoutString(std::string newContent) { _layoutString = newContent; }
+	void setLayoutString(std::string newContent);
+	Brick*** getLayout() { return p_brickLayout; }
 	std::string getName() { return _name; }
 	int getNumber() { return _number; }
 	std::string getLayoutString() { return _layoutString; }
-	Brick*** buildLayout();
+	void buildLayout();
 
 };
 

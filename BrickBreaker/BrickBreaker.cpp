@@ -4,7 +4,8 @@ using namespace std;
 
 BrickBreaker::BrickBreaker() :
 	_currentStage(1),
-	_currentLevel(1) {
+	_currentLevel(1),
+	_level(NULL) {
 
 }
 
@@ -32,24 +33,32 @@ void BrickBreaker::initialize(HWND hwnd) {
 	_background.push_back(pPlanet);
 	
 	loadStagesFromFile();
+	_stage = getStage(_currentStage);
 	loadLevel();
 	return;
 }
 
-//TODO(Logan) -> Refactor the code that changes levels and stages along with drawing it on the screen.
+//TODO(Logan) -> Remove the _currentLevel and _currentStage variables.
 void BrickBreaker::update() {
 	if (p_input->wasKeyPressed(NEXT_MAP)) {
-		Stage* currentStage = getStage(_currentStage);
-		if (!currentStage) {
+		if (_stage == NULL) {
 			return;
 		}
 
-		int levelCount = currentStage->getLevelCount();
-		if (_currentLevel == levelCount) {
+		if (_currentLevel == _stage->getLevelCount()) {
 			_currentLevel = 0;
 			_currentStage++;
+			_stage = getStage(_currentStage);
 		}
 
+		if (_stage == NULL) {
+			_level = NULL;
+			safeDelete(_level);
+			safeDelete(_stage);
+			return;
+		}
+
+		int levelCount = _stage->getLevelCount();
 		if (_currentLevel < levelCount) {
 			_currentLevel++;
 		}
@@ -73,12 +82,11 @@ void BrickBreaker::render() {
 		(*iter)->draw();
 	}
 
-	if (p_currentLayout) {
-		drawBrickLayout();
+	if (_level != NULL) {
+		renderLevel();
 	}
 
 	p_graphics->spriteEnd();
-
 	return;
 }
 
@@ -133,27 +141,24 @@ void BrickBreaker::loadStagesFromFile() {
 		}
 		else if (propertyName == "Content") {
 			level->setLayoutString(propertyValue);
-			stage->addLevel(*level);
-			delete level;
+			stage->addLevel(level);
 		}
 	}
 	_stages.push_back(stage);
 }
 
 void BrickBreaker::loadLevel() {
-	Stage* currentStage = getStage(_currentStage);
-	if (!currentStage) {
-		p_currentLayout = NULL;
+	if (_stage == NULL) {
 		return;
 	}
 
-	Level* pLevel = NULL;
-	pLevel = currentStage->getLevel(_currentLevel);
-
-	if (!pLevel) {
-		return;
+	if (_level == NULL) {
+		_level = _stage->getLevel(1);
 	}
-	p_currentLayout = pLevel->buildLayout();
+	else {
+		int levelNumber = _level->getNumber();
+		_level = _stage->getLevel(++levelNumber);
+	}
 }
 
 Stage* BrickBreaker::getStage(int stageNumber) {
@@ -169,15 +174,16 @@ Stage* BrickBreaker::getStage(int stageNumber) {
 	return currentStage;
 }
 
-void BrickBreaker::drawBrickLayout() {
+void BrickBreaker::renderLevel() {
+	Brick*** layout = _level->getLayout();
 	float startX = 20.0f;
-	float brickWidth = p_currentLayout[0][0]->getWidth();
-	float brickHeight = p_currentLayout[0][0]->getHeight();
+	float brickWidth = layout[0][0]->getWidth();
+	float brickHeight = layout[0][0]->getHeight();
 	float brickX = startX;
 	float brickY = 0.0f;
 	for (UINT i = 0; i < 8; i++) {
 		for (UINT j = 0; j < 8; j++) {
-			Brick* brick = p_currentLayout[i][j];
+			Brick* brick = layout[i][j];
 			if (brick->getType() != BrickType::NoBrick) {
 				brick->setX(brickX);
 				brick->setY(brickY);

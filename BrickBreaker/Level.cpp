@@ -12,6 +12,16 @@ Level::Level(Graphics* pGraphics) {
 }
 
 Level::~Level() {
+	destructLayout();
+}
+
+void Level::setLayoutString(string newContent) {
+	_layoutString = newContent;
+	destructLayout();
+	buildLayout();
+}
+
+void Level::destructLayout() {
 	if (p_brickLayout == NULL) {
 		return;
 	}
@@ -31,7 +41,7 @@ void Level::construct() {
 	p_graphics = NULL;
 }
 
-Brick*** Level::buildLayout() {
+void Level::buildLayout() {
 	string levelContent = getLayoutString();
 	UINT size = _layoutString.size();
 	UINT brickRow = 0;
@@ -54,6 +64,4 @@ Brick*** Level::buildLayout() {
 		p_brickLayout[brickRow][brickCol] = brick;
 		brickCol++;
 	}
-
-	return p_brickLayout;
 }
