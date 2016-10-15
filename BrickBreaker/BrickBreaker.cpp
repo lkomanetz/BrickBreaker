@@ -18,6 +18,8 @@ BrickBreaker::~BrickBreaker() {
 	for (vector<Stage*>::iterator it = _stages.begin(); it != _stages.end(); ++it) {
 		delete (*it);
 	}
+	safeDelete(_level);
+	safeDelete(_stage);
 }
 
 void BrickBreaker::initialize(HWND hwnd) {
@@ -42,6 +44,7 @@ void BrickBreaker::initialize(HWND hwnd) {
 void BrickBreaker::update() {
 	if (p_input->wasKeyPressed(NEXT_MAP)) {
 		if (_stage == NULL) {
+			safeDelete(_stage);
 			return;
 		}
 
@@ -149,10 +152,12 @@ void BrickBreaker::loadStagesFromFile() {
 
 void BrickBreaker::loadLevel() {
 	if (_stage == NULL) {
+		delete _stage;
 		return;
 	}
 
 	if (_level == NULL) {
+		delete _level;
 		_level = _stage->getLevel(1);
 	}
 	else {
