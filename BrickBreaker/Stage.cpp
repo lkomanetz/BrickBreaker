@@ -3,7 +3,7 @@
 using namespace std;
 
 Stage::Stage() :
-	_number(0) {
+	_id(0) {
 	_levels = new vector<Level*>();
 }
 

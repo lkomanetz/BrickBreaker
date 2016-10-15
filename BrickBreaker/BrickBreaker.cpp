@@ -125,7 +125,7 @@ void BrickBreaker::loadStagesFromFile() {
 
 	Level* level = NULL;
 	Stage* stage = new Stage();
-	stage->setNumber(1);
+	stage->setId(1);
 	vector<string>::iterator iter;
 	for (iter = fileContent.begin(); iter != fileContent.end(); ++iter) {
 		int position = (*iter).find("=");
@@ -134,7 +134,7 @@ void BrickBreaker::loadStagesFromFile() {
 
 		if (propertyName == "Level") {
 			level = new Level(p_graphics);
-			level->setNumber(stoi(propertyValue));
+			level->setId(stoi(propertyValue));
 		}
 		else if (propertyName == "Name") {
 			level->setName(propertyValue);
@@ -165,7 +165,7 @@ Stage* BrickBreaker::getStage(int stageNumber) {
 	Stage* currentStage = NULL;
 	vector<Stage*>::iterator iter;
 	for (iter = _stages.begin(); iter != _stages.end(); ++iter) {
-		if ((*iter)->getNumber() == stageNumber) {
+		if ((*iter)->getId() == stageNumber) {
 			currentStage = (*iter);
 			break;
 		}

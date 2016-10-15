@@ -35,7 +35,7 @@ void Level::destructLayout() {
 }
 
 void Level::construct() {
-	_number = 0;
+	_id = 0;
 	_layoutString = "";
 	_name = "";
 	p_graphics = NULL;

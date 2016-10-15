@@ -9,7 +9,7 @@
 class Level {
 private:
 	std::string _name;
-	int _number;
+	int _id;
 	std::string _layoutString;
 	Brick*** p_brickLayout;
 	Graphics* p_graphics;
@@ -22,11 +22,11 @@ public:
 	Level(Graphics* pGraphics);
 	virtual ~Level();
 	void setName(std::string newName) { _name = newName; }
-	void setNumber(int newNumber) { _number = newNumber; }
+	void setId(int newId) { _id = newId; }
 	void setLayoutString(std::string newContent);
 	Brick*** getLayout() { return p_brickLayout; }
 	std::string getName() { return _name; }
-	int getNumber() { return _number; }
+	int getNumber() { return _id; }
 	std::string getLayoutString() { return _layoutString; }
 	void buildLayout();
 
