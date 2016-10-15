@@ -32,12 +32,14 @@ void Level::destructLayout() {
 		}
 		safeDeleteArray(p_brickLayout[i]);
 	}
+	safeDeleteArray(p_brickLayout);
 }
 
 void Level::construct() {
 	_id = 0;
 	_layoutString = "";
 	_name = "";
+	p_brickLayout = NULL;
 	p_graphics = NULL;
 }
 

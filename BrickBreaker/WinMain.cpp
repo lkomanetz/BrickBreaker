@@ -1,7 +1,7 @@
-#define _CRTDBG_MAP_ALLOC
 #define WIN32_LEAN_AND_MEAN
 
 #include <Windows.h>
+#define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
 #include <crtdbg.h>
 

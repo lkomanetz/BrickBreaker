@@ -12,11 +12,11 @@ BrickBreaker::BrickBreaker() :
 BrickBreaker::~BrickBreaker() {
 	std::vector<GameObject*>::iterator iter;
 	for (iter = _background.begin(); iter != _background.end(); iter++) {
-		delete (*iter);
+		safeDelete((*iter));
 	}
 
 	for (vector<Stage*>::iterator it = _stages.begin(); it != _stages.end(); ++it) {
-		delete (*it);
+		safeDelete((*it));
 	}
 	safeDelete(_level);
 	safeDelete(_stage);

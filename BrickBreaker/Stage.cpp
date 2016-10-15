@@ -8,18 +8,22 @@ Stage::Stage() :
 }
 
 Stage::~Stage() {
-	safeDelete(_levels);
+	auto iter = _levels.begin();
+	while (iter != _levels.end()) {
+		safeDelete((*iter));
+		++iter;
+	}
 }
 
 Level* Stage::getLevel(int levelNumber) const {
 	Level* returnValue = NULL;
 
-	vector<Level*>::iterator iter;
-	for (iter = _levels.begin(); iter != _levels.end(); ++iter) {
+	auto iter = _levels.begin();
+	while (iter != _levels.end()) {
 		if ((*iter)->getNumber() == levelNumber) {
 			returnValue = (*iter);
 		}
+		++iter;
 	}
-
 	return returnValue;
 }
