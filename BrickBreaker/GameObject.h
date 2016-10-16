@@ -26,10 +26,12 @@ private:
 protected:
 	bool initialize(Graphics* p_graphics, int width, int height, int ncols, const char* fileLocation);
 	void construct();
+	void copyData(const GameObject& obj);
 
 public:
 	GameObject();
 	GameObject(Graphics* pGraphics, int width, int height, int ncols, const char* fileLocation);
+	GameObject(const GameObject& obj);
 	virtual ~GameObject();
 
 	virtual void draw(COLOR_ARGB color = GraphicsNS::WHITE);
@@ -71,6 +73,7 @@ public:
 	virtual void setColorFilter(COLOR_ARGB color) { _colorFilter = color; }
 	virtual void setTextureManager(TextureManager* tm) { p_textureManager = tm; }
 	virtual TextureManager* getTextureManager() { return p_textureManager; }
+	virtual GameObject& operator=(const GameObject& obj);
 };
 
 #endif

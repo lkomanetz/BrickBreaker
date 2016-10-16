@@ -9,9 +9,38 @@ GameObject::GameObject(Graphics* pGraphics, int width, int height, int ncols, co
 	this->initialize(pGraphics, width, height, ncols, fileLocation);
 }
 
-GameObject::~GameObject() { }
+GameObject::~GameObject() {
+	safeDelete(p_textureManager);
+}
 
 void GameObject::update(float frameTime) {}
+
+GameObject::GameObject(const GameObject& obj) {
+	copyData(obj);
+}
+
+void GameObject::copyData(const GameObject& obj) {
+	p_textureManager = new TextureManager(*obj.p_textureManager);
+	_initialized = obj._initialized;
+	p_graphics = obj.p_graphics;
+	_spriteData = obj._spriteData;
+	_colorFilter = obj._colorFilter;
+	_columns = obj._columns;
+	_startFrame = obj._startFrame;
+	_endFrame = obj._endFrame;
+	_currentFrame = obj._currentFrame;
+	_frameDelay = obj._frameDelay;
+	_animationTimer = obj._animationTimer;
+	_result = obj._result;
+	_loop = obj._loop;
+	_visible = obj._visible;
+	_animationComplete = obj._animationComplete;
+}
+
+GameObject& GameObject::operator=(const GameObject& obj) {
+	copyData(obj);
+	return *this;
+}
 
 void GameObject::construct() {
 	_initialized = false;

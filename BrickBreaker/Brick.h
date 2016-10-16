@@ -4,6 +4,7 @@
 
 #include "GameObject.h"
 #include "Graphics.h"
+#include <string>
 
 enum class BrickType : int {
 	NoBrick,
