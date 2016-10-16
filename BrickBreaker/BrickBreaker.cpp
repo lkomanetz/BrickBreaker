@@ -15,6 +15,9 @@ BrickBreaker::~BrickBreaker() {
 	}
 }
 
+/*
+The issue is with TextureManager somehow.
+*/
 void BrickBreaker::initialize(HWND hwnd) {
 	Game::initialize(hwnd);
 	_nebula = GameObject(p_graphics, 0, 0, 0, NEBULA_IMAGE);
