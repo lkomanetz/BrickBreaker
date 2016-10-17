@@ -22,6 +22,7 @@ TextureManager::TextureManager(Graphics* pGraphics, const char* file) :
 
 TextureManager::TextureManager(const TextureManager& obj) {
 	p_texture = obj.p_texture;
+	p_texture = LP_TEXTURE(obj.p_texture);
 	_width = obj._width;
 	_height = obj._height;
 	p_file = obj.p_file;
@@ -31,7 +32,7 @@ TextureManager::TextureManager(const TextureManager& obj) {
 }
 
 TextureManager& TextureManager::operator=(const TextureManager& obj) {
-	p_texture = obj.p_texture;
+	p_texture = LP_TEXTURE(obj.p_texture);
 	_width = obj._width;
 	_height = obj._height;
 	p_file = obj.p_file;
