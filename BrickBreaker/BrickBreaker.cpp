@@ -21,6 +21,10 @@ The issue is with TextureManager somehow.
 void BrickBreaker::initialize(HWND hwnd) {
 	Game::initialize(hwnd);
 	_nebula = GameObject(p_graphics, 0, 0, 0, NEBULA_IMAGE);
+	_planet = GameObject(p_graphics, 0, 0, 0, PLANET_IMAGE);
+
+	_planet.setX(GAME_WIDTH * 0.5f - _planet.getWidth() * 0.5f);
+	_planet.setY(GAME_HEIGHT * 0.5f - _planet.getHeight() * 0.5f);
 	
 	//loadStagesFromFile();
 	//loadLevel();
@@ -47,6 +51,7 @@ void BrickBreaker::render() {
 	//}
 
 	_nebula.draw();
+	_planet.draw();
 
 	// _brick.draw();
 

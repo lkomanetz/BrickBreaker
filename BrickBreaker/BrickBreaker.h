@@ -12,6 +12,7 @@
 class BrickBreaker : public Game {
 private:
 	GameObject _nebula;
+	GameObject _planet;
 	std::vector<GameObject*> _background;
 	UINT _currentStage;
 	UINT _currentLevel;
