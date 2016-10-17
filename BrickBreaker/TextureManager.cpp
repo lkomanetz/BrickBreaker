@@ -20,6 +20,27 @@ TextureManager::TextureManager(Graphics* pGraphics, const char* file) :
 	this->initialize(pGraphics, file);
 }
 
+TextureManager::TextureManager(const TextureManager& obj) {
+	p_texture = obj.p_texture;
+	_width = obj._width;
+	_height = obj._height;
+	p_file = obj.p_file;
+	p_graphics = obj.p_graphics;
+	_initialized = obj._initialized;
+	_result = obj._result;
+}
+
+TextureManager& TextureManager::operator=(const TextureManager& obj) {
+	p_texture = obj.p_texture;
+	_width = obj._width;
+	_height = obj._height;
+	p_file = obj.p_file;
+	p_graphics = obj.p_graphics;
+	_initialized = obj._initialized;
+	_result = obj._result;
+	return *this;
+}
+
 TextureManager::~TextureManager() {
 	safeRelease(p_texture);
 }

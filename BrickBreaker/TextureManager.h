@@ -20,6 +20,7 @@ private:
 public:
 	TextureManager();
 	TextureManager(Graphics* pGraphics, const char* file);
+	TextureManager(const TextureManager& obj);
 	virtual ~TextureManager();
 	
 	LP_TEXTURE getTexture() { return p_texture; }
@@ -27,6 +28,7 @@ public:
 	UINT getHeight() { return _height; }
 	virtual void onLostDevice();
 	virtual void onResetDevice();
+	TextureManager& operator=(const TextureManager& obj);
 };
 
 #endif

@@ -10,17 +10,12 @@ GameObject::GameObject(Graphics* pGraphics, int width, int height, int ncols, co
 }
 
 GameObject::~GameObject() {
-	safeDelete(p_textureManager);
 }
 
 void GameObject::update(float frameTime) {}
 
 GameObject::GameObject(const GameObject& obj) {
-	copyData(obj);
-}
-
-void GameObject::copyData(const GameObject& obj) {
-	p_textureManager = new TextureManager(*obj.p_textureManager);
+	_textureManager = obj._textureManager;
 	_initialized = obj._initialized;
 	p_graphics = obj.p_graphics;
 	_spriteData = obj._spriteData;
@@ -38,14 +33,27 @@ void GameObject::copyData(const GameObject& obj) {
 }
 
 GameObject& GameObject::operator=(const GameObject& obj) {
-	copyData(obj);
+	_textureManager = obj._textureManager;
+	_initialized = obj._initialized;
+	p_graphics = obj.p_graphics;
+	_spriteData = obj._spriteData;
+	_colorFilter = obj._colorFilter;
+	_columns = obj._columns;
+	_startFrame = obj._startFrame;
+	_endFrame = obj._endFrame;
+	_currentFrame = obj._currentFrame;
+	_frameDelay = obj._frameDelay;
+	_animationTimer = obj._animationTimer;
+	_result = obj._result;
+	_loop = obj._loop;
+	_visible = obj._visible;
+	_animationComplete = obj._animationComplete;
 	return *this;
 }
 
 void GameObject::construct() {
 	_initialized = false;
 	_columns = 1;
-	p_textureManager = NULL;
 	_startFrame = 0;
 	_endFrame = 0;
 	_currentFrame = 0;
@@ -75,16 +83,16 @@ void GameObject::construct() {
 bool GameObject::initialize(Graphics* graphics, int width, int height, int ncols, const char* fileLocation) {
 	try {
 		p_graphics = graphics;
-		p_textureManager = new TextureManager(graphics, fileLocation);
-		_spriteData.texture = p_textureManager->getTexture();
+		_textureManager = TextureManager(graphics, fileLocation);
+		_spriteData.texture = _textureManager.getTexture();
 
 		if (width == 0) {
-			width = p_textureManager->getWidth();
+			width = _textureManager.getWidth();
 		}
 		_spriteData.width = width;
 
 		if (height == 0) {
-			height = p_textureManager->getHeight();
+			height = _textureManager.getHeight();
 		}
 		_spriteData.height = height;
 
@@ -130,7 +138,7 @@ void GameObject::draw(COLOR_ARGB color) {
 		return;
 	}
 
-	_spriteData.texture = p_textureManager->getTexture();
+	_spriteData.texture = _textureManager.getTexture();
 	if (color == GraphicsNS::FILTER) {
 		p_graphics->drawSprite(_spriteData, _colorFilter);
 	}
@@ -145,7 +153,7 @@ void GameObject::draw(SpriteData sd, COLOR_ARGB color) {
 	}
 
 	sd.rectangle = _spriteData.rectangle;
-	sd.texture = p_textureManager->getTexture();
+	sd.texture = _textureManager.getTexture();
 
 	if (color == GraphicsNS::FILTER) {
 		p_graphics->drawSprite(sd, _colorFilter);

@@ -8,7 +8,7 @@
 class GameObject {
 private:
 	Graphics* p_graphics;
-	TextureManager* p_textureManager;
+	TextureManager _textureManager;
 	SpriteData _spriteData;
 	COLOR_ARGB _colorFilter;
 	int _columns;
@@ -26,7 +26,6 @@ private:
 protected:
 	bool initialize(Graphics* p_graphics, int width, int height, int ncols, const char* fileLocation);
 	void construct();
-	void copyData(const GameObject& obj);
 
 public:
 	GameObject();
@@ -71,9 +70,9 @@ public:
 	virtual void setLoop(bool loop) { _loop = loop; }
 	virtual void setAnimationComplete(bool isComplete) { _animationComplete = isComplete; }
 	virtual void setColorFilter(COLOR_ARGB color) { _colorFilter = color; }
-	virtual void setTextureManager(TextureManager* tm) { p_textureManager = tm; }
-	virtual TextureManager* getTextureManager() { return p_textureManager; }
-	virtual GameObject& operator=(const GameObject& obj);
+	virtual void setTextureManager(TextureManager tm) { _textureManager = tm; }
+	virtual TextureManager getTextureManager() { return _textureManager; }
+	GameObject& operator=(const GameObject& rObj);
 };
 
 #endif

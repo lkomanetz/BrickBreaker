@@ -61,7 +61,7 @@ void BrickBreaker::calculateCollisions() {
 void BrickBreaker::releaseAll() {
 	vector<GameObject*>::iterator iter;
 	for (iter = _background.begin(); iter != _background.end(); iter++) {
-		(*iter)->getTextureManager()->onLostDevice();
+		(*iter)->getTextureManager().onLostDevice();
 	}
 	Game::releaseAll();
 
@@ -71,7 +71,7 @@ void BrickBreaker::releaseAll() {
 void BrickBreaker::resetAll() {
 	vector<GameObject*>::iterator iter;
 	for (iter = _background.begin(); iter != _background.end(); iter++) {
-		(*iter)->getTextureManager()->onResetDevice();
+		(*iter)->getTextureManager().onResetDevice();
 	}
 	Game::resetAll();
 
