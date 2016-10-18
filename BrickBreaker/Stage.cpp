@@ -4,23 +4,41 @@ using namespace std;
 
 Stage::Stage() :
 	_id(0) {
-	_levels = vector<Level*>();
+	_levels = vector<Level>();
 }
 
-Stage::~Stage() {
-	auto iter = _levels.begin();
-	while (iter != _levels.end()) {
-		safeDelete((*iter));
-		++iter;
+Stage::Stage(const Stage& obj) {
+	_id = obj._id;
+	_levelCount = obj._levelCount;
+
+	auto iter = obj._levels.begin();
+	for (auto iter = obj._levels.begin(); iter != obj._levels.end(); ++iter) {
+		Level copiedLevel = Level((*iter));
+		_levels.push_back(copiedLevel);
 	}
 }
 
-Level* Stage::getLevel(int levelNumber) const {
-	Level* returnValue = NULL;
+Stage& Stage::operator=(const Stage& rightObj) {
+	_id = rightObj._id;
+	_levelCount = rightObj._levelCount;
+
+	for (auto iter = rightObj._levels.begin(); iter != rightObj._levels.end(); ++iter) {
+		Level copiedLevel = Level((*iter));
+		_levels.push_back(copiedLevel);
+	}
+	return *this;
+}
+
+//TODO(Logan) -> Revisit this.  I'm not sure if stage should destruct _levels or not.
+Stage::~Stage() {
+}
+
+Level Stage::getLevel(int levelNumber) {
+	Level returnValue;
 
 	auto iter = _levels.begin();
 	while (iter != _levels.end()) {
-		if ((*iter)->getNumber() == levelNumber) {
+		if ((*iter).getNumber() == levelNumber) {
 			returnValue = (*iter);
 		}
 		++iter;

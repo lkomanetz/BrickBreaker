@@ -11,15 +11,18 @@
 
 class BrickBreaker : public Game {
 private:
+	std::vector<Stage> _stages;
+	Brick* p_brick;
+	Brick** _currentLayout;
 	GameObject _nebula;
 	GameObject _planet;
-	std::vector<GameObject*> _background;
 	UINT _currentStage;
 	UINT _currentLevel;
 
 	void loadLevel();
 	void loadStagesFromFile();
 	void renderLevel();
+	void destructCurrentLayout();
 	Stage* getStage(int stageNumber);
 
 public:

@@ -21,7 +21,10 @@ private:
 public:
 	Brick();
 	Brick(Graphics* pGraphics);
+	Brick(const Brick& obj);
 	virtual ~Brick();
+
+	Brick& operator=(const Brick& rightObj);
 
 	BrickType getType() const { return _type; }
 	void setType(const BrickType newType) { _type = newType; }

@@ -33,6 +33,8 @@ public:
 	GameObject(const GameObject& obj);
 	virtual ~GameObject();
 
+	GameObject& operator=(const GameObject& rObj);
+
 	virtual void draw(COLOR_ARGB color = GraphicsNS::WHITE);
 	virtual void draw(SpriteData spriteData, COLOR_ARGB color = GraphicsNS::WHITE);
 	virtual void update(float frameTime);
@@ -72,7 +74,6 @@ public:
 	virtual void setColorFilter(COLOR_ARGB color) { _colorFilter = color; }
 	virtual void setTextureManager(TextureManager tm) { _textureManager = tm; }
 	virtual TextureManager getTextureManager() { return _textureManager; }
-	GameObject& operator=(const GameObject& rObj);
 };
 
 #endif
