@@ -23,6 +23,7 @@ private:
 	void loadStagesFromFile();
 	void renderLevel();
 	void destructCurrentLayout();
+	void showWinScreen();
 	Stage* getStage(int stageNumber);
 
 public:

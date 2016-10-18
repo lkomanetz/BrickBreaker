@@ -2,6 +2,7 @@
 
 using namespace std;
 
+//TODO(Logan) -> Try to refactor to have _currentLevel be actual level along with _currentStage being actual stage.
 BrickBreaker::BrickBreaker() :
 	_currentStage(1),
 	_currentLevel(1) {
@@ -14,9 +15,6 @@ BrickBreaker::~BrickBreaker() {
 	destructCurrentLayout();
 }
 
-/*
-The issue is with TextureManager somehow.
-*/
 void BrickBreaker::initialize(HWND hwnd) {
 	Game::initialize(hwnd);
 	_nebula = GameObject(p_graphics, 0, 0, 0, NEBULA_IMAGE);
@@ -34,12 +32,17 @@ void BrickBreaker::initialize(HWND hwnd) {
 	return;
 }
 
-//TODO(Logan) -> Remove the _currentLevel and _currentStage variables.
 void BrickBreaker::update() {
 	if (p_input->wasKeyPressed(NEXT_MAP)) {
 		_currentLevel++;
-		loadLevel();
+		if (_currentLevel <= _stages.at(_currentStage - 1).getLevelCount()) {
+			loadLevel();
+		}
+		else if (_currentLevel > _stages.at(_currentStage - 1).getLevelCount()) {
+			showWinScreen();
+		}
 	}
+
 	return;
 }
 
@@ -53,7 +56,9 @@ void BrickBreaker::render() {
 	_nebula.draw();
 	_planet.draw();
 
-	renderLevel();
+	if (_currentLayout) {
+		renderLevel();
+	}
 
 	p_graphics->spriteEnd();
 	return;
@@ -166,8 +171,16 @@ void BrickBreaker::renderLevel() {
 }
 
 void BrickBreaker::destructCurrentLayout() {
+	if (!_currentLayout) {
+		return;
+	}
+
 	for (int i = 0; i < 8; i++) {
 		safeDeleteArray(_currentLayout[i]);
 	}
 	safeDeleteArray(_currentLayout);
+}
+
+void BrickBreaker::showWinScreen() {
+	destructCurrentLayout();
 }

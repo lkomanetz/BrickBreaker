@@ -34,7 +34,6 @@ inline void safeRelease(T& ptr) {
 	}
 }
 
-//TODO(Logan) -> Fix bug with safeDelete and deleting partially constructed objects
 template <typename T>
 inline void safeDelete(T& ptr) {
 	if (ptr) {
