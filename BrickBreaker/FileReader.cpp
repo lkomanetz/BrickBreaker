@@ -12,6 +12,12 @@ FileReader::FileReader(string fileLocation) :
 	loadContents();
 }
 
+void FileReader::setLocation(string fileLocation) {
+	_fileLocation = fileLocation;
+	_fileContents.clear();
+	loadContents();
+}
+
 void FileReader::loadContents() {
 	if (_fileLocation.empty()) {
 		return;

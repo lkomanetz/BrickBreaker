@@ -22,7 +22,7 @@ public:
 	int getId() { return _id; }
 	int getLevelCount() { return _levelCount; }
 	void addLevel(Level level) { _levels.push_back(level); _levelCount++; }
-	Level getLevel(int levelId);
+	Level* getLevel(int levelId);
 	std::vector<Level> getLevels() { return _levels; }
 };
 

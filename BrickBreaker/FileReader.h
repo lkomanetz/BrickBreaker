@@ -15,7 +15,7 @@ private:
 public:
 	FileReader();
 	FileReader(std::string fileLocation);
-	void setLocation(std::string fileLocation) { _fileLocation = fileLocation; }
+	void setLocation(std::string fileLocation);
 	std::string getLocation() { return _fileLocation; }
 	std::vector<std::string> getContents() { return _fileContents; }
 };

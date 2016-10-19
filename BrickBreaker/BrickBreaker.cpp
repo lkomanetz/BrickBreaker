@@ -3,15 +3,11 @@
 using namespace std;
 
 //TODO(Logan) -> Try to refactor to have _currentLevel be actual level along with _currentStage being actual stage.
-BrickBreaker::BrickBreaker() :
-	_currentStage(1),
-	_currentLevel(1) {
-
+BrickBreaker::BrickBreaker() {
 	_currentLayout = new Brick*[8]{ 0 };
 }
 
 BrickBreaker::~BrickBreaker() {
-	delete p_brick;
 	destructCurrentLayout();
 }
 
@@ -19,22 +15,22 @@ void BrickBreaker::initialize(HWND hwnd) {
 	Game::initialize(hwnd);
 	_nebula = GameObject(p_graphics, 0, 0, 0, NEBULA_IMAGE);
 	_planet = GameObject(p_graphics, 0, 0, 0, PLANET_IMAGE);
-	p_brick = new Brick(p_graphics);
 
 	_planet.setX(GAME_WIDTH * 0.5f - _planet.getWidth() * 0.5f);
 	_planet.setY(GAME_HEIGHT * 0.5f - _planet.getHeight() * 0.5f);
 
-	p_brick->setX(15.0f);
-	p_brick->setY(15.0f);
-	
 	loadStagesFromFile();
+	_currentStage = _stages.at(0);
+	_currentLevel = _currentStage.getLevel(1);
 	loadLevel();
 	return;
 }
 
 void BrickBreaker::update() {
 	if (p_input->wasKeyPressed(NEXT_MAP)) {
-		_currentLevel++;
+		int currentId = _currentLevel->getNumber();
+		_currentLevel = _currentStage.getLevel(++currentId);
+
 		if (_currentLevel <= _stages.at(_currentStage - 1).getLevelCount()) {
 			loadLevel();
 		}
@@ -85,35 +81,38 @@ void BrickBreaker::resetAll() {
 }
 
 void BrickBreaker::loadStagesFromFile() {
-	std::string fileName = "stages/" + std::to_string(_currentStage) + ".txt";
+	UINT stageNumber = _currentStage;
+	std::string fileName = "stages/" + std::to_string(stageNumber) + ".txt";
 	FileReader fReader(fileName);
 	vector<string> fileContent = fReader.getContents();
 
-	if (fileContent.size() == 0) {
-		return;
-	}
+	while (fReader.getContents().size() > 0) {
+		vector<string> fileContent = fReader.getContents();
+		Level level;
+		Stage stage;
+		stage.setId(_currentStage);
+		for (auto iter = fileContent.begin(); iter != fileContent.end(); ++iter) {
+			int position = (*iter).find("=");
+			string propName = (*iter).substr(0, position);
+			string propValue = (*iter).substr(++position, (*iter).length());
 
-	Level level;
-	Stage stage;
-	stage.setId(_currentStage);
-	for (auto iter = fileContent.begin(); iter != fileContent.end(); ++iter) {
-		int position = (*iter).find("=");
-		string propName = (*iter).substr(0, position);
-		string propValue = (*iter).substr(++position, (*iter).length());
+			if (propName == "Level") {
+				level = Level(p_graphics);
+				level.setId(stoi(propValue));
+			}
+			else if (propName == "Name") {
+				level.setName(propValue);
+			}
+			else if (propName == "Content") {
+				level.setLayoutString(propValue);
+				stage.addLevel(level);
+			}
+		}
+		_stages.push_back(stage);
 
-		if (propName == "Level") {
-			level = Level(p_graphics);
-			level.setId(stoi(propValue));
-		}
-		else if (propName == "Name") {
-			level.setName(propValue);
-		}
-		else if (propName == "Content") {
-			level.setLayoutString(propValue);
-			stage.addLevel(level);
-		}
+		fileName = "stages/" + std::to_string(++stageNumber) + ".txt";
+		fReader.setLocation(fileName);
 	}
-	_stages.push_back(stage);
 }
 
 void BrickBreaker::loadLevel() {

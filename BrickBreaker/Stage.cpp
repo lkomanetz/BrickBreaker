@@ -29,11 +29,10 @@ Stage& Stage::operator=(const Stage& rightObj) {
 	return *this;
 }
 
-//TODO(Logan) -> Revisit this.  I'm not sure if stage should destruct _levels or not.
 Stage::~Stage() {
 }
 
-Level Stage::getLevel(int levelNumber) {
+Level* Stage::getLevel(int levelNumber) {
 	Level returnValue;
 
 	auto iter = _levels.begin();
@@ -43,5 +42,5 @@ Level Stage::getLevel(int levelNumber) {
 		}
 		++iter;
 	}
-	return returnValue;
+	return &returnValue;
 }
