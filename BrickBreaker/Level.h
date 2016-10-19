@@ -27,7 +27,7 @@ public:
 	void setId(int newId) { _id = newId; }
 	void setLayoutString(std::string newContent);
 	std::string getName() { return _name; }
-	int getNumber() const { return _id; }
+	int getId() const { return _id; }
 	std::string getLayoutString() { return _layoutString; }
 	void buildLayout();
 

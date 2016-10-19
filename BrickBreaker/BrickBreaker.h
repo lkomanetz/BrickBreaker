@@ -11,12 +11,12 @@
 
 class BrickBreaker : public Game {
 private:
+	std::vector<GameObject> _background;
 	std::vector<Stage> _stages;
 	Brick** _currentLayout;
-	GameObject _nebula;
-	GameObject _planet;
-	Stage _currentStage;
-	Level* _currentLevel;
+	Stage* p_currentStage;
+	UINT _currentLevelId;
+	Level* p_currentLevel;
 
 	void loadLevel();
 	void loadStagesFromFile();
@@ -24,6 +24,7 @@ private:
 	void destructCurrentLayout();
 	void showWinScreen();
 	Stage* getStage(int stageNumber);
+	std::vector<GameObject> getBackground();
 
 public:
 	BrickBreaker();

@@ -2,7 +2,6 @@
 
 using namespace std;
 
-//TODO(Logan) -> Try to refactor to have _currentLevel be actual level along with _currentStage being actual stage.
 BrickBreaker::BrickBreaker() {
 	_currentLayout = new Brick*[8]{ 0 };
 }
@@ -13,33 +12,27 @@ BrickBreaker::~BrickBreaker() {
 
 void BrickBreaker::initialize(HWND hwnd) {
 	Game::initialize(hwnd);
-	_nebula = GameObject(p_graphics, 0, 0, 0, NEBULA_IMAGE);
-	_planet = GameObject(p_graphics, 0, 0, 0, PLANET_IMAGE);
-
-	_planet.setX(GAME_WIDTH * 0.5f - _planet.getWidth() * 0.5f);
-	_planet.setY(GAME_HEIGHT * 0.5f - _planet.getHeight() * 0.5f);
+	_background = getBackground();
 
 	loadStagesFromFile();
-	_currentStage = _stages.at(0);
-	_currentLevel = _currentStage.getLevel(1);
+	p_currentStage = &_stages.at(0);
+	p_currentLevel = p_currentStage->getLevel(1);
+	_currentLevelId = p_currentLevel->getId();
 	loadLevel();
 	return;
 }
 
 void BrickBreaker::update() {
 	if (p_input->wasKeyPressed(NEXT_MAP)) {
-		int currentId = _currentLevel->getNumber();
-		_currentLevel = _currentStage.getLevel(++currentId);
+		p_currentLevel = p_currentStage->getLevel(++_currentLevelId);
 
-		if (_currentLevel <= _stages.at(_currentStage - 1).getLevelCount()) {
-			loadLevel();
-		}
-		else if (_currentLevel > _stages.at(_currentStage - 1).getLevelCount()) {
+		if (!p_currentLevel) {
 			showWinScreen();
+			return;
 		}
-	}
 
-	return;
+		loadLevel();
+	}
 }
 
 void BrickBreaker::performAi() {
@@ -49,8 +42,11 @@ void BrickBreaker::performAi() {
 void BrickBreaker::render() {
 	p_graphics->spriteBegin();
 
-	_nebula.draw();
-	_planet.draw();
+	vector<GameObject>::iterator iter = _background.begin();
+	while (iter != _background.end()) {
+		(*iter).draw();
+		++iter;
+	}
 
 	if (_currentLayout) {
 		renderLevel();
@@ -65,23 +61,29 @@ void BrickBreaker::calculateCollisions() {
 }
 
 void BrickBreaker::releaseAll() {
-	_nebula.getTextureManager().onLostDevice();
-	_planet.getTextureManager().onLostDevice();
+	vector<GameObject>::iterator iter = _background.begin();
+	while (iter != _background.end()) {
+		(*iter).getTextureManager().onLostDevice();
+		++iter;
+	}
 	Game::releaseAll();
 
 	return;
 }
 
 void BrickBreaker::resetAll() {
-	_nebula.getTextureManager().onResetDevice();
-	_nebula.getTextureManager().onResetDevice();
+	vector<GameObject>::iterator iter = _background.begin();
+	while (iter != _background.end()) {
+		(*iter).getTextureManager().onResetDevice();
+		++iter;
+	}
 	Game::resetAll();
 
 	return;
 }
 
 void BrickBreaker::loadStagesFromFile() {
-	UINT stageNumber = _currentStage;
+	UINT stageNumber = 1;
 	std::string fileName = "stages/" + std::to_string(stageNumber) + ".txt";
 	FileReader fReader(fileName);
 	vector<string> fileContent = fReader.getContents();
@@ -90,7 +92,7 @@ void BrickBreaker::loadStagesFromFile() {
 		vector<string> fileContent = fReader.getContents();
 		Level level;
 		Stage stage;
-		stage.setId(_currentStage);
+		stage.setId(stageNumber);
 		for (auto iter = fileContent.begin(); iter != fileContent.end(); ++iter) {
 			int position = (*iter).find("=");
 			string propName = (*iter).substr(0, position);
@@ -119,9 +121,7 @@ void BrickBreaker::loadLevel() {
 	destructCurrentLayout();
 	_currentLayout = new Brick*[8];
 
-	Stage currentStage = _stages.at(_currentStage - 1);
-	Level currentLevel = currentStage.getLevel(_currentLevel);
-	string levelContent = currentLevel.getLayoutString();
+	string levelContent = p_currentLevel->getLayoutString();
 	size_t size = levelContent.size();
 	UINT brickRow = 0;
 	UINT brickCol = 0;
@@ -182,4 +182,17 @@ void BrickBreaker::destructCurrentLayout() {
 
 void BrickBreaker::showWinScreen() {
 	destructCurrentLayout();
+}
+
+vector<GameObject> BrickBreaker::getBackground() {
+	vector<GameObject> background;
+	GameObject nebula = GameObject(p_graphics, 0, 0, 0, NEBULA_IMAGE);
+	GameObject planet = GameObject(p_graphics, 0, 0, 0, PLANET_IMAGE);
+
+	planet.setX(GAME_WIDTH * 0.5f - planet.getWidth() * 0.5f);
+	planet.setY(GAME_HEIGHT * 0.5f - planet.getHeight() * 0.5f);
+
+	background.push_back(nebula);
+	background.push_back(planet);
+	return background;
 }

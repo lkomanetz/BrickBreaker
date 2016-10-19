@@ -33,14 +33,15 @@ Stage::~Stage() {
 }
 
 Level* Stage::getLevel(int levelNumber) {
-	Level returnValue;
+	Level* returnAddress = NULL;
 
 	auto iter = _levels.begin();
 	while (iter != _levels.end()) {
-		if ((*iter).getNumber() == levelNumber) {
-			returnValue = (*iter);
+		if ((*iter).getId() == levelNumber) {
+			returnAddress = &(*iter);
+			break;
 		}
 		++iter;
 	}
-	return &returnValue;
+	return returnAddress;
 }
