@@ -15,7 +15,10 @@ enum class BrickType : int {
 
 class Brick : public GameObject {
 private:
-	const char* _imageLocation = "images/brick.png";
+	const char* _imageLocation = "images/bricks.png";
+	const int _imageHeight = 18;
+	const int _imageWidth = 59;
+	const int _numberOfColumns = 3;
 	BrickType _type;
 
 public:

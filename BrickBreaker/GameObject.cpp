@@ -12,7 +12,30 @@ GameObject::GameObject(Graphics* pGraphics, int width, int height, int ncols, co
 GameObject::~GameObject() {
 }
 
-void GameObject::update(float frameTime) {}
+void GameObject::update(float frameTime) {
+	if ((_endFrame - _startFrame) == 0) {
+		_animationTimer += frameTime;
+
+		if (_animationTimer > _frameDelay) {
+			_animationTimer -= _frameDelay;
+			_currentFrame++;
+
+			if (_currentFrame < _startFrame ||
+				_currentFrame > _endFrame) {
+
+				if (_loop) {
+					_currentFrame = _startFrame;
+				}
+				else {
+					_currentFrame = _endFrame;
+					_animationComplete = true;
+				}
+			}
+
+			setRect();
+		}
+	}
+}
 
 GameObject::GameObject(const GameObject& obj) {
 	_textureManager = obj._textureManager;

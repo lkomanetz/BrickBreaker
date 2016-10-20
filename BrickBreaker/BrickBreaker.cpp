@@ -3,7 +3,7 @@
 using namespace std;
 
 BrickBreaker::BrickBreaker() {
-	_currentLayout = new Brick*[8]{ 0 };
+	_currentLayout = new Brick*[11]{ 0 };
 }
 
 BrickBreaker::~BrickBreaker() {
@@ -23,6 +23,14 @@ void BrickBreaker::initialize(HWND hwnd) {
 }
 
 void BrickBreaker::update() {
+	if (_currentLayout != NULL) {
+		for (UINT i = 0; i < 11; i++) {
+			for (UINT j = 0; j < 8; j++) {
+				_currentLayout[i][j].update(_frameTime);
+			}
+		}
+	}
+
 	if (p_input->wasKeyPressed(NEXT_MAP)) {
 		p_currentLevel = p_currentStage->getLevel(++_currentLevelId);
 
@@ -119,7 +127,7 @@ void BrickBreaker::loadStagesFromFile() {
 
 void BrickBreaker::loadLevel() {
 	destructCurrentLayout();
-	_currentLayout = new Brick*[8];
+	_currentLayout = new Brick*[11];
 
 	string levelContent = p_currentLevel->getLayoutString();
 	size_t size = levelContent.size();
@@ -139,6 +147,23 @@ void BrickBreaker::loadLevel() {
 
 		BrickType type = static_cast<BrickType>(levelContent[i] - '0');
 		brick.setType(type);
+
+		switch (type) {
+			case BrickType::Indestructible:
+				brick.setFrames(0, 2);
+				brick.setFrameDelay(0.2f);
+				brick.setCurrentFrame(0);
+				break;
+			case BrickType::Normal:
+				brick.setFrames(1, 1);
+				brick.setCurrentFrame(1);
+				break;
+			case BrickType::TwoHit:
+				brick.setFrames(2, 2);
+				brick.setCurrentFrame(2);
+				break;
+		}
+		
 		_currentLayout[brickRow][brickCol] = brick;
 		brickCol++;
 	}
@@ -149,12 +174,12 @@ Stage* BrickBreaker::getStage(int stageNumber) {
 }
 
 void BrickBreaker::renderLevel() {
-	float startX = 20.0f;
+	float startX = GAME_WIDTH * 0.10;
 	float brickWidth = _currentLayout[0][0].getWidth();
 	float brickHeight = _currentLayout[0][0].getHeight();
 	float brickX = startX;
 	float brickY = 0.0f;
-	for (UINT i = 0; i < 8; i++) {
+	for (UINT i = 0; i < 11; i++) {
 		for (UINT j = 0; j < 8; j++) {
 			Brick brick = _currentLayout[i][j];
 			if (brick.getType() != BrickType::NoBrick) {
@@ -174,7 +199,7 @@ void BrickBreaker::destructCurrentLayout() {
 		return;
 	}
 
-	for (int i = 0; i < 8; i++) {
+	for (int i = 0; i < 11; i++) {
 		safeDeleteArray(_currentLayout[i]);
 	}
 	safeDeleteArray(_currentLayout);

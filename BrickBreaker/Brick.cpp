@@ -3,7 +3,12 @@
 Brick::Brick() {}
 
 Brick::Brick(Graphics* pGraphics) {
-	this->initialize(pGraphics, 0, 0, 0, _imageLocation);
+	this->initialize(pGraphics,
+		_imageWidth,
+		_imageHeight,
+		_numberOfColumns,
+		_imageLocation
+	);
 }
 
 Brick::Brick(const Brick& obj) : GameObject(obj) {
