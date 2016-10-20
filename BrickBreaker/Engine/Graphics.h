@@ -10,7 +10,7 @@
 class Graphics;
 #include <d3d9.h>
 #include <d3dx9.h>
-#include "Constants.h"
+#include "../Constants.h"
 #include "GameError.h"
 
 // DirectX pointer types

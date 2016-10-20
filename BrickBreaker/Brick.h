@@ -2,8 +2,8 @@
 #ifndef _BRICK_H
 #define _BRICK_H
 
-#include "GameObject.h"
-#include "Graphics.h"
+#include "Engine/GameObject.h"
+#include "Engine/Graphics.h"
 #include <string>
 
 enum class BrickType : int {
@@ -15,7 +15,6 @@ enum class BrickType : int {
 
 class Brick : public GameObject {
 private:
-	const char* _imageLocation = "images/bricks.png";
 	const int _imageHeight = 18;
 	const int _imageWidth = 59;
 	const int _numberOfColumns = 3;
@@ -23,7 +22,7 @@ private:
 
 public:
 	Brick();
-	Brick(Graphics* pGraphics);
+	Brick(Graphics* pGraphics, TextureManager* textureManager);
 	Brick(const Brick& obj);
 	virtual ~Brick();
 

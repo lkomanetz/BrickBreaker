@@ -1,14 +1,14 @@
 #pragma once
-#ifndef _GAMEOBJECT_H
-#define _GAMEOBJECT_H
+#ifndef _IMAGE_H
+#define _IMAGE_H
 
 #include "Graphics.h"
 #include "TextureManager.h"
 
-class GameObject {
+class Image {
 private:
 	Graphics* p_graphics;
-	TextureManager _textureManager;
+	TextureManager* p_textureManager;
 	SpriteData _spriteData;
 	COLOR_ARGB _colorFilter;
 	int _columns;
@@ -24,16 +24,16 @@ private:
 	bool _animationComplete;
 
 protected:
-	bool initialize(Graphics* p_graphics, int width, int height, int ncols, const char* fileLocation);
+	bool initialize(Graphics* p_graphics, int width, int height, int ncols, TextureManager* textureManager);
 	void construct();
 
 public:
-	GameObject();
-	GameObject(Graphics* pGraphics, int width, int height, int ncols, const char* fileLocation);
-	GameObject(const GameObject& obj);
-	virtual ~GameObject();
+	Image();
+	Image(Graphics* pGraphics, int width, int height, int ncols, TextureManager* textureManager);
+	Image(const Image& obj);
+	virtual ~Image();
 
-	GameObject& operator=(const GameObject& rObj);
+	Image& operator=(const Image& rObj);
 
 	virtual void draw(COLOR_ARGB color = GraphicsNS::WHITE);
 	virtual void draw(SpriteData spriteData, COLOR_ARGB color = GraphicsNS::WHITE);
@@ -72,8 +72,8 @@ public:
 	virtual void setLoop(bool loop) { _loop = loop; }
 	virtual void setAnimationComplete(bool isComplete) { _animationComplete = isComplete; }
 	virtual void setColorFilter(COLOR_ARGB color) { _colorFilter = color; }
-	virtual void setTextureManager(TextureManager tm) { _textureManager = tm; }
-	virtual TextureManager getTextureManager() { return _textureManager; }
+	virtual void setTextureManager(TextureManager* tm) { p_textureManager = tm; }
+	virtual TextureManager* getTextureManager() { return p_textureManager; }
 };
 
 #endif

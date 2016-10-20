@@ -4,7 +4,7 @@
 #include <Windows.h>
 #include <mmsystem.h>
 #include "Graphics.h"
-#include "Constants.h"
+#include "../Constants.h"
 #include "GameError.h"
 #include "Input.h"
 

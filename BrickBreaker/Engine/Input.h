@@ -9,7 +9,7 @@ class Input;
 #include <windowsx.h>
 #include <string>
 #include <XInput.h>
-#include "Constants.h"
+#include "../Constants.h"
 #include "GameError.h"
 
 // For high-definition mouse

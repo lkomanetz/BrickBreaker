@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <crtdbg.h>
 
-#include "Graphics.h"
+#include "Engine/Graphics.h"
 #include "BrickBreaker.h"
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int);

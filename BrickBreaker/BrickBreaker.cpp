@@ -12,6 +12,9 @@ BrickBreaker::~BrickBreaker() {
 
 void BrickBreaker::initialize(HWND hwnd) {
 	Game::initialize(hwnd);
+	_gameTextures = TextureManager(p_graphics, "images//bricks.png");
+	_nebulaTexture = TextureManager(p_graphics, NEBULA_IMAGE);
+	_planetTexture = TextureManager(p_graphics, PLANET_IMAGE);
 	_background = getBackground();
 
 	loadStagesFromFile();
@@ -50,7 +53,7 @@ void BrickBreaker::performAi() {
 void BrickBreaker::render() {
 	p_graphics->spriteBegin();
 
-	vector<GameObject>::iterator iter = _background.begin();
+	vector<Image>::iterator iter = _background.begin();
 	while (iter != _background.end()) {
 		(*iter).draw();
 		++iter;
@@ -69,9 +72,9 @@ void BrickBreaker::calculateCollisions() {
 }
 
 void BrickBreaker::releaseAll() {
-	vector<GameObject>::iterator iter = _background.begin();
+	vector<Image>::iterator iter = _background.begin();
 	while (iter != _background.end()) {
-		(*iter).getTextureManager().onLostDevice();
+		(*iter).getTextureManager()->onLostDevice();
 		++iter;
 	}
 	Game::releaseAll();
@@ -80,9 +83,9 @@ void BrickBreaker::releaseAll() {
 }
 
 void BrickBreaker::resetAll() {
-	vector<GameObject>::iterator iter = _background.begin();
+	vector<Image>::iterator iter = _background.begin();
 	while (iter != _background.end()) {
-		(*iter).getTextureManager().onResetDevice();
+		(*iter).getTextureManager()->onResetDevice();
 		++iter;
 	}
 	Game::resetAll();
@@ -143,24 +146,26 @@ void BrickBreaker::loadLevel() {
 			continue;
 		}
 
-		Brick brick = Brick(p_graphics);
+		Brick brick = Brick(p_graphics, &_gameTextures);
 
 		BrickType type = static_cast<BrickType>(levelContent[i] - '0');
 		brick.setType(type);
 
 		switch (type) {
 			case BrickType::Indestructible:
-				brick.setFrames(0, 2);
-				brick.setFrameDelay(0.2f);
+				brick.setFrames(0, 0);
 				brick.setCurrentFrame(0);
+				brick.setHealth(0);
 				break;
 			case BrickType::Normal:
 				brick.setFrames(1, 1);
 				brick.setCurrentFrame(1);
+				brick.setHealth(1);
 				break;
 			case BrickType::TwoHit:
 				brick.setFrames(2, 2);
 				brick.setCurrentFrame(2);
+				brick.setHealth(2);
 				break;
 		}
 		
@@ -209,10 +214,10 @@ void BrickBreaker::showWinScreen() {
 	destructCurrentLayout();
 }
 
-vector<GameObject> BrickBreaker::getBackground() {
-	vector<GameObject> background;
-	GameObject nebula = GameObject(p_graphics, 0, 0, 0, NEBULA_IMAGE);
-	GameObject planet = GameObject(p_graphics, 0, 0, 0, PLANET_IMAGE);
+vector<Image> BrickBreaker::getBackground() {
+	vector<Image> background;
+	Image nebula = Image(p_graphics, 0, 0, 0, &_nebulaTexture);
+	Image planet = Image(p_graphics, 0, 0, 0, &_planetTexture);
 
 	planet.setX(GAME_WIDTH * 0.5f - planet.getWidth() * 0.5f);
 	planet.setY(GAME_HEIGHT * 0.5f - planet.getHeight() * 0.5f);

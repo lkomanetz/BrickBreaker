@@ -2,23 +2,21 @@
 
 Brick::Brick() {}
 
-Brick::Brick(Graphics* pGraphics) {
+Brick::Brick(Graphics* pGraphics, TextureManager* textureManager) {
 	this->initialize(pGraphics,
 		_imageWidth,
 		_imageHeight,
 		_numberOfColumns,
-		_imageLocation
+		textureManager
 	);
 }
 
 Brick::Brick(const Brick& obj) : GameObject(obj) {
-	_imageLocation = obj._imageLocation;
 	_type = obj._type;
 }
 
 Brick& Brick::operator=(const Brick& rightObj) {
 	GameObject::operator=(rightObj);
-	_imageLocation = rightObj._imageLocation;
 	_type = rightObj._type;
 	return *this;
 }

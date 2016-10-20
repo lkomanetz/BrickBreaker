@@ -1,8 +1,8 @@
 #pragma once
 #ifndef _BRICKBREAKER_H
 #define _BRICKBREAKER_H
-#include "Game.h"
-#include "GameObject.h"
+#include "Engine/Game.h"
+#include "Engine/Image.h"
 #include "Brick.h"
 #include "Level.h"
 #include "Stage.h"
@@ -11,7 +11,10 @@
 
 class BrickBreaker : public Game {
 private:
-	std::vector<GameObject> _background;
+	TextureManager _gameTextures;
+	TextureManager _nebulaTexture;
+	TextureManager _planetTexture;
+	std::vector<Image> _background;
 	std::vector<Stage> _stages;
 	Brick** _currentLayout;
 	Stage* p_currentStage;
@@ -24,7 +27,7 @@ private:
 	void destructCurrentLayout();
 	void showWinScreen();
 	Stage* getStage(int stageNumber);
-	std::vector<GameObject> getBackground();
+	std::vector<Image> getBackground();
 
 public:
 	BrickBreaker();

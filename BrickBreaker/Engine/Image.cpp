@@ -1,44 +1,21 @@
-#include "GameObject.h"
+#include "Image.h"
 
-GameObject::GameObject() {
+Image::Image() {
 	this->construct();
 }
 
-GameObject::GameObject(Graphics* pGraphics, int width, int height, int ncols, const char* fileLocation) {
+Image::Image(Graphics* pGraphics, int width, int height, int ncols, TextureManager* textureManager) {
 	this->construct();
-	this->initialize(pGraphics, width, height, ncols, fileLocation);
+	this->initialize(pGraphics, width, height, ncols, textureManager);
 }
 
-GameObject::~GameObject() {
+Image::~Image() {
 }
 
-void GameObject::update(float frameTime) {
-	if ((_endFrame - _startFrame) == 0) {
-		_animationTimer += frameTime;
+void Image::update(float frameTime) {}
 
-		if (_animationTimer > _frameDelay) {
-			_animationTimer -= _frameDelay;
-			_currentFrame++;
-
-			if (_currentFrame < _startFrame ||
-				_currentFrame > _endFrame) {
-
-				if (_loop) {
-					_currentFrame = _startFrame;
-				}
-				else {
-					_currentFrame = _endFrame;
-					_animationComplete = true;
-				}
-			}
-
-			setRect();
-		}
-	}
-}
-
-GameObject::GameObject(const GameObject& obj) {
-	_textureManager = obj._textureManager;
+Image::Image(const Image& obj) {
+	p_textureManager = obj.p_textureManager;
 	_initialized = obj._initialized;
 	p_graphics = obj.p_graphics;
 	_spriteData = obj._spriteData;
@@ -55,8 +32,8 @@ GameObject::GameObject(const GameObject& obj) {
 	_animationComplete = obj._animationComplete;
 }
 
-GameObject& GameObject::operator=(const GameObject& obj) {
-	_textureManager = obj._textureManager;
+Image& Image::operator=(const Image& obj) {
+	p_textureManager = obj.p_textureManager;
 	_initialized = obj._initialized;
 	p_graphics = obj.p_graphics;
 	_spriteData = obj._spriteData;
@@ -74,7 +51,7 @@ GameObject& GameObject::operator=(const GameObject& obj) {
 	return *this;
 }
 
-void GameObject::construct() {
+void Image::construct() {
 	_initialized = false;
 	_columns = 1;
 	_startFrame = 0;
@@ -103,19 +80,19 @@ void GameObject::construct() {
 	_spriteData.isHorizontalFlipped = false;
 }
 
-bool GameObject::initialize(Graphics* graphics, int width, int height, int ncols, const char* fileLocation) {
+bool Image::initialize(Graphics* graphics, int width, int height, int ncols, TextureManager* textureManager) {
 	try {
 		p_graphics = graphics;
-		_textureManager = TextureManager(graphics, fileLocation);
-		_spriteData.texture = _textureManager.getTexture();
+		p_textureManager = textureManager;
+		_spriteData.texture = p_textureManager->getTexture();
 
 		if (width == 0) {
-			width = _textureManager.getWidth();
+			width = p_textureManager->getWidth();
 		}
 		_spriteData.width = width;
 
 		if (height == 0) {
-			height = _textureManager.getHeight();
+			height = p_textureManager->getHeight();
 		}
 		_spriteData.height = height;
 
@@ -133,7 +110,7 @@ bool GameObject::initialize(Graphics* graphics, int width, int height, int ncols
 		_initialized = false;
 		throw GameError(
 			GameErrorNS::FATAL_ERROR,
-			"Unable to initialize image for file '" + std::string(fileLocation) + "'"
+			"Unable to initialize Image."
 		);
 		return false;
 	}
@@ -141,7 +118,7 @@ bool GameObject::initialize(Graphics* graphics, int width, int height, int ncols
 	return true;
 }
 
-void GameObject::setCurrentFrame(int currentFrame) {
+void Image::setCurrentFrame(int currentFrame) {
 	if (currentFrame >= 0) {
 		_currentFrame = currentFrame;
 		_animationComplete = false;
@@ -149,19 +126,19 @@ void GameObject::setCurrentFrame(int currentFrame) {
 	}
 }
 
-inline void GameObject::setRect() {
+inline void Image::setRect() {
 	_spriteData.rectangle.left = (_currentFrame % _columns) * _spriteData.width;
 	_spriteData.rectangle.right = _spriteData.rectangle.left + _spriteData.width;
 	_spriteData.rectangle.top = (_currentFrame / _columns) * _spriteData.width;
 	_spriteData.rectangle.bottom = _spriteData.rectangle.top + _spriteData.height;
 }
 
-void GameObject::draw(COLOR_ARGB color) {
+void Image::draw(COLOR_ARGB color) {
 	if (!_visible || p_graphics == NULL) {
 		return;
 	}
 
-	_spriteData.texture = _textureManager.getTexture();
+	_spriteData.texture = p_textureManager->getTexture();
 	if (color == GraphicsNS::FILTER) {
 		p_graphics->drawSprite(_spriteData, _colorFilter);
 	}
@@ -170,13 +147,13 @@ void GameObject::draw(COLOR_ARGB color) {
 	}
 }
 
-void GameObject::draw(SpriteData sd, COLOR_ARGB color) {
+void Image::draw(SpriteData sd, COLOR_ARGB color) {
 	if (!_visible || p_graphics == NULL) {
 		return;
 	}
 
 	sd.rectangle = _spriteData.rectangle;
-	sd.texture = _textureManager.getTexture();
+	sd.texture = p_textureManager->getTexture();
 
 	if (color == GraphicsNS::FILTER) {
 		p_graphics->drawSprite(sd, _colorFilter);

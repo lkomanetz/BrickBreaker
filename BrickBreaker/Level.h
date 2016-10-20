@@ -4,7 +4,7 @@
 
 #include <string>
 #include "Brick.h"
-#include "Graphics.h"
+#include "Engine/Graphics.h"
 
 class Level {
 private:

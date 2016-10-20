@@ -4,7 +4,7 @@
 #define WIN32_LEAN_AND_MEAN
 
 #include "Graphics.h"
-#include "Constants.h"
+#include "../Constants.h"
 
 class TextureManager {
 private:
