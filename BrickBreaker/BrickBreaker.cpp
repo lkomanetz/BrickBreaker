@@ -35,7 +35,6 @@ void BrickBreaker::update() {
 		}
 	}
 
-	//TODO(Logan) -> Refactor loading next stage and next level.
 	if (p_input->wasKeyPressed(NEXT_MAP)) {
 		p_currentLevel = getNextLevel();
 
@@ -62,7 +61,7 @@ void BrickBreaker::render() {
 	}
 
 	if (_currentLayout) {
-		renderLevel();
+		renderLayout();
 	}
 
 	p_graphics->spriteEnd();
@@ -194,7 +193,7 @@ Stage* BrickBreaker::getStage(int stageNumber) {
 	return returnValue;
 }
 
-void BrickBreaker::renderLevel() {
+void BrickBreaker::renderLayout() {
 	float startX = GAME_WIDTH * 0.10;
 	float brickWidth = _currentLayout[0][0].getWidth();
 	float brickHeight = _currentLayout[0][0].getHeight();

@@ -24,7 +24,7 @@ private:
 
 	void loadLevel();
 	void loadStagesFromFile();
-	void renderLevel();
+	void renderLayout();
 	void destructCurrentLayout();
 	void showWinScreen();
 	Level* getNextLevel();
