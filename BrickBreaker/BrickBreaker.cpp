@@ -11,14 +11,15 @@ BrickBreaker::~BrickBreaker() {
 }
 
 void BrickBreaker::initialize(HWND hwnd) {
+	_currentStageId = 1;
 	Game::initialize(hwnd);
-	_gameTextures = TextureManager(p_graphics, "images//bricks.png");
+	_gameTextures = TextureManager(p_graphics, BRICK_IMAGE);
 	_nebulaTexture = TextureManager(p_graphics, NEBULA_IMAGE);
 	_planetTexture = TextureManager(p_graphics, PLANET_IMAGE);
 	_background = getBackground();
 
 	loadStagesFromFile();
-	p_currentStage = &_stages.at(0);
+	p_currentStage = getStage(_currentStageId);
 	p_currentLevel = p_currentStage->getLevel(1);
 	_currentLevelId = p_currentLevel->getId();
 	loadLevel();
@@ -34,8 +35,9 @@ void BrickBreaker::update() {
 		}
 	}
 
+	//TODO(Logan) -> Refactor loading next stage and next level.
 	if (p_input->wasKeyPressed(NEXT_MAP)) {
-		p_currentLevel = p_currentStage->getLevel(++_currentLevelId);
+		p_currentLevel = getNextLevel();
 
 		if (!p_currentLevel) {
 			showWinScreen();
@@ -74,9 +76,10 @@ void BrickBreaker::calculateCollisions() {
 void BrickBreaker::releaseAll() {
 	vector<Image>::iterator iter = _background.begin();
 	while (iter != _background.end()) {
-		(*iter).getTextureManager()->onLostDevice();
+		(*iter).releaseTextureManager();
 		++iter;
 	}
+	_gameTextures.onLostDevice();
 	Game::releaseAll();
 
 	return;
@@ -85,9 +88,10 @@ void BrickBreaker::releaseAll() {
 void BrickBreaker::resetAll() {
 	vector<Image>::iterator iter = _background.begin();
 	while (iter != _background.end()) {
-		(*iter).getTextureManager()->onResetDevice();
+		(*iter).resetTextureManager();
 		++iter;
 	}
+	_gameTextures.onResetDevice();
 	Game::resetAll();
 
 	return;
@@ -175,7 +179,19 @@ void BrickBreaker::loadLevel() {
 }
 
 Stage* BrickBreaker::getStage(int stageNumber) {
-	return NULL;
+	vector<Stage>::iterator iter = _stages.begin();
+	Stage* returnValue = NULL;
+
+	while (iter != _stages.end()) {
+		if ((*iter).getId() == stageNumber) {
+			returnValue = &(*iter);
+			break;
+		}
+
+		++iter;
+	}
+
+	return returnValue;
 }
 
 void BrickBreaker::renderLevel() {
@@ -225,4 +241,26 @@ vector<Image> BrickBreaker::getBackground() {
 	background.push_back(nebula);
 	background.push_back(planet);
 	return background;
+}
+
+Level* BrickBreaker::getNextLevel() {
+	if (!p_currentStage) {
+		return NULL;
+	}
+
+	Level* pNextLevel = NULL;
+	pNextLevel = p_currentStage->getLevel(++_currentLevelId);
+
+	if (!pNextLevel) {
+		p_currentStage = getStage(++_currentStageId);
+
+		if (!p_currentStage) {
+			return NULL;
+		}
+
+		_currentLevelId = 1;
+		pNextLevel = p_currentStage->getLevel(_currentLevelId);
+	}
+
+	return pNextLevel;
 }

@@ -74,6 +74,8 @@ public:
 	virtual void setColorFilter(COLOR_ARGB color) { _colorFilter = color; }
 	virtual void setTextureManager(TextureManager* tm) { p_textureManager = tm; }
 	virtual TextureManager* getTextureManager() { return p_textureManager; }
+	void releaseTextureManager() { p_textureManager->onLostDevice(); }
+	void resetTextureManager() { p_textureManager->onResetDevice(); }
 };
 
 #endif

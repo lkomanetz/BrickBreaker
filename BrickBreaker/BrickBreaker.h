@@ -18,6 +18,7 @@ private:
 	std::vector<Stage> _stages;
 	Brick** _currentLayout;
 	Stage* p_currentStage;
+	UINT _currentStageId;
 	UINT _currentLevelId;
 	Level* p_currentLevel;
 
@@ -26,6 +27,7 @@ private:
 	void renderLevel();
 	void destructCurrentLayout();
 	void showWinScreen();
+	Level* getNextLevel();
 	Stage* getStage(int stageNumber);
 	std::vector<Image> getBackground();
 
