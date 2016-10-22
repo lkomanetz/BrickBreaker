@@ -18,6 +18,6 @@ Ball::Ball(Graphics* pGraphics, TextureManager* pTextureManager) {
 
 void Ball::initialize() {
 	_imageWidth = 16;
-	_imageHeight = 24;
-	_numberOfColumns = 1;
+	_imageHeight = 16;
+	_numberOfColumns = 3;
 }

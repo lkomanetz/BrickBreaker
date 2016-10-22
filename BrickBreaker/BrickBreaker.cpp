@@ -53,11 +53,6 @@ void BrickBreaker::update() {
 		loadLevel();
 	}
 
-	float ballY = _gameBall.getY();
-	if (ballY >= 0) {
-		ballY -= 0.25f;
-	}
-	_gameBall.setY(ballY);
 }
 
 void BrickBreaker::performAi() {
