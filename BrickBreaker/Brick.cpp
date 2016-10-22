@@ -1,9 +1,12 @@
 #include "Brick.h"
 
-Brick::Brick() {}
+Brick::Brick() {
+	initialize();
+}
 
 Brick::Brick(Graphics* pGraphics, TextureManager* textureManager) {
-	this->initialize(pGraphics,
+	initialize();
+	GameObject::initialize(pGraphics,
 		_imageWidth,
 		_imageHeight,
 		_numberOfColumns,
@@ -22,4 +25,10 @@ Brick& Brick::operator=(const Brick& rightObj) {
 }
 
 Brick::~Brick() {
+}
+
+void Brick::initialize() {
+	_imageWidth = 59;
+	_imageHeight = 18;
+	_numberOfColumns = 3;
 }

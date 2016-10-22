@@ -8,6 +8,9 @@
 class GameObject : public Image {
 protected:
 	UINT _health;
+	UINT _imageWidth;
+	UINT _imageHeight;
+	UINT _numberOfColumns;
 
 public:
 	GameObject();

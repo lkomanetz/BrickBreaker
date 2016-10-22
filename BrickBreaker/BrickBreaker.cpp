@@ -8,6 +8,7 @@ BrickBreaker::BrickBreaker() {
 
 BrickBreaker::~BrickBreaker() {
 	destructCurrentLayout();
+	releaseAll();
 }
 
 void BrickBreaker::initialize(HWND hwnd) {
@@ -17,6 +18,12 @@ void BrickBreaker::initialize(HWND hwnd) {
 	_nebulaTexture = TextureManager(p_graphics, NEBULA_IMAGE);
 	_planetTexture = TextureManager(p_graphics, PLANET_IMAGE);
 	_background = getBackground();
+
+	_gameBall = Ball(p_graphics, &_gameTextures);
+	_gameBall.setFrames(3, 3);
+	_gameBall.setCurrentFrame(3);
+	_gameBall.setX(GAME_WIDTH * 0.5f - _gameBall.getWidth() * 0.5f);
+	_gameBall.setY(GAME_HEIGHT - 30.0f);
 
 	loadStagesFromFile();
 	p_currentStage = getStage(_currentStageId);
@@ -45,6 +52,12 @@ void BrickBreaker::update() {
 
 		loadLevel();
 	}
+
+	float ballY = _gameBall.getY();
+	if (ballY >= 0) {
+		ballY -= 0.25f;
+	}
+	_gameBall.setY(ballY);
 }
 
 void BrickBreaker::performAi() {
@@ -63,6 +76,8 @@ void BrickBreaker::render() {
 	if (_currentLayout) {
 		renderLayout();
 	}
+
+	_gameBall.draw();
 
 	p_graphics->spriteEnd();
 	return;

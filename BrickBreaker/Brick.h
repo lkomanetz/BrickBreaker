@@ -15,11 +15,9 @@ enum class BrickType : int {
 
 class Brick : public GameObject {
 private:
-	const int _imageHeight = 18;
-	const int _imageWidth = 59;
-	const int _numberOfColumns = 3;
 	BrickType _type;
 
+	void initialize();
 public:
 	Brick();
 	Brick(Graphics* pGraphics, TextureManager* textureManager);
