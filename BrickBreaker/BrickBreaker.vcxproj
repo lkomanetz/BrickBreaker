@@ -144,6 +144,7 @@
     <ClCompile Include="Engine\TextureManager.cpp" />
     <ClCompile Include="FileReader.cpp" />
     <ClCompile Include="Level.cpp" />
+    <ClCompile Include="Paddle.cpp" />
     <ClCompile Include="Stage.cpp" />
     <ClCompile Include="WinMain.cpp" />
   </ItemGroup>
@@ -161,6 +162,7 @@
     <ClInclude Include="Engine\TextureManager.h" />
     <ClInclude Include="FileReader.h" />
     <ClInclude Include="Level.h" />
+    <ClInclude Include="Paddle.h" />
     <ClInclude Include="Stage.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

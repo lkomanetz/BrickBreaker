@@ -5,6 +5,7 @@
 #include "Engine/Image.h"
 #include "Brick.h"
 #include "Ball.h"
+#include "Paddle.h"
 #include "Level.h"
 #include "Stage.h"
 #include "FileReader.h"
@@ -12,6 +13,7 @@
 
 class BrickBreaker : public Game {
 private:
+	Paddle _paddle;
 	Ball _gameBall;
 	TextureManager _gameTextures;
 	TextureManager _nebulaTexture;

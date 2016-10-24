@@ -25,6 +25,12 @@ void BrickBreaker::initialize(HWND hwnd) {
 	_gameBall.setX(GAME_WIDTH * 0.5f - _gameBall.getWidth() * 0.5f);
 	_gameBall.setY(GAME_HEIGHT - 30.0f);
 
+	_paddle = Paddle(p_graphics, &_gameTextures);
+	_paddle.setFrames(4, 4);
+	_paddle.setCurrentFrame(4);
+	_paddle.setX(_gameBall.getX());
+	_paddle.setY(_gameBall.getY() + 15.0f);
+
 	loadStagesFromFile();
 	p_currentStage = getStage(_currentStageId);
 	p_currentLevel = p_currentStage->getLevel(1);
@@ -73,6 +79,7 @@ void BrickBreaker::render() {
 	}
 
 	_gameBall.draw();
+	_paddle.draw();
 
 	p_graphics->spriteEnd();
 	return;

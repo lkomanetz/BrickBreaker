@@ -6,7 +6,8 @@ Brick::Brick() {
 
 Brick::Brick(Graphics* pGraphics, TextureManager* textureManager) {
 	initialize();
-	GameObject::initialize(pGraphics,
+	GameObject::initialize(
+		pGraphics,
 		_imageWidth,
 		_imageHeight,
 		_numberOfColumns,
