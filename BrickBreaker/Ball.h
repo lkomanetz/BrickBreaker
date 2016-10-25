@@ -5,6 +5,9 @@
 #include "Engine/GameObject.h"
 #include "Engine/Graphics.h"
 
+class GameObject;
+class Graphics;
+
 class Ball : public GameObject {
 private:
 	void initialize();

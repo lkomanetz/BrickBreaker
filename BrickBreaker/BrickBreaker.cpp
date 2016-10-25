@@ -14,6 +14,7 @@ BrickBreaker::~BrickBreaker() {
 void BrickBreaker::initialize(HWND hwnd) {
 	_currentStageId = 1;
 	Game::initialize(hwnd);
+	//NOTE(Logan) -> Might be able to have one texture manager with all assets but it may not work.
 	_ballTexture = TextureManager(p_graphics, BALL_IMAGE);
 	_paddleTexture = TextureManager(p_graphics, PADDLE_IMAGE);
 	_brickTextures = TextureManager(p_graphics, BRICK_IMAGE);
@@ -127,7 +128,7 @@ void BrickBreaker::loadStagesFromFile() {
 		Stage stage;
 		stage.setId(stageNumber);
 		for (auto iter = fileContent.begin(); iter != fileContent.end(); ++iter) {
-			int position = (*iter).find("=");
+			size_t position = (*iter).find("=");
 			string propName = (*iter).substr(0, position);
 			string propValue = (*iter).substr(++position, (*iter).length());
 
@@ -214,8 +215,8 @@ Stage* BrickBreaker::getStage(int stageNumber) {
 
 void BrickBreaker::renderLayout() {
 	float startX = GAME_WIDTH * 0.10;
-	float brickWidth = _currentLayout[0][0].getWidth();
-	float brickHeight = _currentLayout[0][0].getHeight();
+	float brickWidth = (float)_currentLayout[0][0].getWidth();
+	float brickHeight = (float)_currentLayout[0][0].getHeight();
 	float brickX = startX;
 	float brickY = 0.0f;
 	for (UINT i = 0; i < 11; i++) {
