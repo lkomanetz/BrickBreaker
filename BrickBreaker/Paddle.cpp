@@ -16,7 +16,7 @@ Paddle::Paddle(Graphics* pGraphics, TextureManager* pTextureManager) {
 }
 
 void Paddle::initialize() {
-	_imageWidth = 34;
-	_imageHeight = 8;
-	_numberOfColumns = 3;
+	_imageWidth = 96;
+	_imageHeight = 18;
+	_numberOfColumns = 0;
 }

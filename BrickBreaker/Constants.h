@@ -11,6 +11,8 @@
 const char NEBULA_IMAGE [] = "images\\orion.jpg";
 const char PLANET_IMAGE [] = "images\\planet.png";
 const char BRICK_IMAGE [] = "images\\bricks.png";
+const char PADDLE_IMAGE[] = "images\\paddle.png";
+const char BALL_IMAGE[] = "images\\ball.png";
 
 // Game
 const double PI = 3.14159265;

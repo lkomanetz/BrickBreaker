@@ -15,7 +15,9 @@ class BrickBreaker : public Game {
 private:
 	Paddle _paddle;
 	Ball _gameBall;
-	TextureManager _gameTextures;
+	TextureManager _ballTexture;
+	TextureManager _paddleTexture;
+	TextureManager _brickTextures;
 	TextureManager _nebulaTexture;
 	TextureManager _planetTexture;
 	std::vector<Image> _background;

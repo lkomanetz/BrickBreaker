@@ -14,22 +14,20 @@ BrickBreaker::~BrickBreaker() {
 void BrickBreaker::initialize(HWND hwnd) {
 	_currentStageId = 1;
 	Game::initialize(hwnd);
-	_gameTextures = TextureManager(p_graphics, BRICK_IMAGE);
+	_ballTexture = TextureManager(p_graphics, BALL_IMAGE);
+	_paddleTexture = TextureManager(p_graphics, PADDLE_IMAGE);
+	_brickTextures = TextureManager(p_graphics, BRICK_IMAGE);
 	_nebulaTexture = TextureManager(p_graphics, NEBULA_IMAGE);
 	_planetTexture = TextureManager(p_graphics, PLANET_IMAGE);
 	_background = getBackground();
 
-	_gameBall = Ball(p_graphics, &_gameTextures);
-	_gameBall.setFrames(3, 3);
-	_gameBall.setCurrentFrame(3);
-	_gameBall.setX(GAME_WIDTH * 0.5f - _gameBall.getWidth() * 0.5f);
-	_gameBall.setY(GAME_HEIGHT - 30.0f);
+	_paddle = Paddle(p_graphics, &_paddleTexture);
+	_paddle.setX(GAME_WIDTH * 0.5f - _paddle.getWidth() * 0.5f);
+	_paddle.setY(GAME_HEIGHT - _paddle.getHeight() - 15.0f);
 
-	_paddle = Paddle(p_graphics, &_gameTextures);
-	_paddle.setFrames(4, 4);
-	_paddle.setCurrentFrame(4);
-	_paddle.setX(_gameBall.getX());
-	_paddle.setY(_gameBall.getY() + 15.0f);
+	_gameBall = Ball(p_graphics, &_ballTexture);
+	_gameBall.setX(GAME_WIDTH * 0.5f - _gameBall.getWidth() * 0.5f);
+	_gameBall.setY(_paddle.getY() - 15.0f);
 
 	loadStagesFromFile();
 	p_currentStage = getStage(_currentStageId);
@@ -95,7 +93,9 @@ void BrickBreaker::releaseAll() {
 		(*iter).releaseTextureManager();
 		++iter;
 	}
-	_gameTextures.onLostDevice();
+	_brickTextures.onLostDevice();
+	_ballTexture.onLostDevice();
+	_paddleTexture.onLostDevice();
 	Game::releaseAll();
 
 	return;
@@ -107,7 +107,9 @@ void BrickBreaker::resetAll() {
 		(*iter).resetTextureManager();
 		++iter;
 	}
-	_gameTextures.onResetDevice();
+	_brickTextures.onResetDevice();
+	_ballTexture.onResetDevice();
+	_paddleTexture.onResetDevice();
 	Game::resetAll();
 
 	return;
@@ -166,7 +168,7 @@ void BrickBreaker::loadLevel() {
 			continue;
 		}
 
-		Brick brick = Brick(p_graphics, &_gameTextures);
+		Brick brick = Brick(p_graphics, &_brickTextures);
 
 		BrickType type = static_cast<BrickType>(levelContent[i] - '0');
 		brick.setType(type);
