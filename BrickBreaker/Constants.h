@@ -26,6 +26,10 @@ const float MIN_FRAME_TIME = 1.0f / FRAME_RATE; // Minimum desired time for one 
 const float MAX_FRAME_TIME = 1.0f / MIN_FRAME_TIME; // Maximum time used in game calculations
 
 // Key Mappings
+//TODO(Logan) -> Add key mappings for keyboard left and right arrows for the paddle.
+//TODO(Logan) -> Add key mappings for gamepad input.
+//NOTE(Logan) -> Might need to do something like const UCHAR PADDLE_LEFT = VK_LEFT | GAMEPAD_DPAD_LEFT;
+// The idea is that PADDLE_LEFT maps to both keyboard left arrow and gamepad dpad left button
 const UCHAR NEXT_MAP = VK_LEFT;
 
 template <typename T>
