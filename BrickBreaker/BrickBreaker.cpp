@@ -28,7 +28,8 @@ void BrickBreaker::initialize(HWND hwnd) {
 
 	_gameBall = Ball(p_graphics, &_ballTexture);
 	_gameBall.setX(GAME_WIDTH * 0.5f - _gameBall.getWidth() * 0.5f);
-	_gameBall.setY(_paddle.getY() - 15.0f);
+	_gameBall.setY(_paddle.getY() - 20.0f);
+	_gameBall.setScale(1.25f);
 
 	loadStagesFromFile();
 	p_currentStage = getStage(_currentStageId);
