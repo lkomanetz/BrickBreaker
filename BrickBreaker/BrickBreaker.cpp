@@ -39,6 +39,7 @@ void BrickBreaker::initialize(HWND hwnd) {
 	return;
 }
 
+//TODO(Logan) -> Get the paddle moving with input.
 void BrickBreaker::update() {
 	if (_currentLayout != NULL) {
 		for (UINT i = 0; i < 11; i++) {
