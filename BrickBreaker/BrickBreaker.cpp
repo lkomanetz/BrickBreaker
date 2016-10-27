@@ -39,10 +39,11 @@ void BrickBreaker::initialize(HWND hwnd) {
 	return;
 }
 
-//TODO(Logan) -> Get the paddle moving with input.
 void BrickBreaker::update() {
 	if (p_input->isGamepadButtonPressed(0, GAMEPAD_DPAD_LEFT) ||
-		p_input->isGamepadButtonPressed(0, GAMEPAD_DPAD_RIGHT)) {
+		p_input->isGamepadButtonPressed(0, GAMEPAD_DPAD_RIGHT) ||
+		p_input->isKeyDown(MOVE_PADDLE_LEFT) ||
+		p_input->isKeyDown(MOVE_PADDLE_RIGHT)) {
 		doDpadMovement();
 	}
 
@@ -319,6 +320,7 @@ void BrickBreaker::doDpadMovement() {
 
 void BrickBreaker::doThumbstickMovement() {
 	float thumbX = (float)p_input->getGamepadThumbX(0, GAMEPAD_LEFT_THUMB);
+	//TODO(Logan) -> Look at moving this into the input class
 	float distanceFromCenter = (thumbX > 0) ? (thumbX / SHRT_MAX) : (thumbX / SHRT_MIN);
 
 	bool isPaddleMovingLeft = thumbX < 0;
