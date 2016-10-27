@@ -12,7 +12,28 @@ Image::Image(Graphics* pGraphics, int width, int height, int ncols, TextureManag
 Image::~Image() {
 }
 
-void Image::update(float frameTime) {}
+void Image::update(float frameTime) {
+	if (isAnimated()) {
+		_animationTimer += frameTime;
+
+		if (_animationTimer > _frameDelay) {
+			_animationTimer -= _frameDelay;
+			_currentFrame++;
+
+			if (_currentFrame < _startFrame || _currentFrame > _endFrame) {
+				if (_loop == true) {
+					_currentFrame = _startFrame;
+				}
+				else {
+					_currentFrame = _endFrame;
+					_animationComplete = true;
+				}
+			}
+
+			setRect();
+		}
+	}
+}
 
 Image::Image(const Image& obj) {
 	p_textureManager = obj.p_textureManager;

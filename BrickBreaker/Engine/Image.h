@@ -35,6 +35,7 @@ public:
 
 	Image& operator=(const Image& rObj);
 
+	inline virtual bool isAnimated() { return (_endFrame - _startFrame) > 0; }
 	virtual void draw(COLOR_ARGB color = GraphicsNS::WHITE);
 	virtual void draw(SpriteData spriteData, COLOR_ARGB color = GraphicsNS::WHITE);
 	virtual void update(float frameTime);

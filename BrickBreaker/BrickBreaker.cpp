@@ -189,7 +189,8 @@ void BrickBreaker::loadLevel() {
 
 		switch (type) {
 			case BrickType::Indestructible:
-				brick.setFrames(0, 0);
+				brick.setFrames(0, 2);
+				brick.setFrameDelay(0.8f);
 				brick.setCurrentFrame(0);
 				brick.setHealth(0);
 				break;
@@ -336,11 +337,4 @@ void BrickBreaker::doThumbstickMovement() {
 			}
 		}
 	}
-
-	//TODO(Logan) -> Remove the DEBUG code
-#if DEBUG
-	char buffer[128];
-	int format = sprintf_s(buffer, "Thumb X: %f\n", distanceFromCenterX);
-	OutputDebugStringA(buffer);
-#endif
 }
