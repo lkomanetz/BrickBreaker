@@ -275,6 +275,7 @@ vector<Image> BrickBreaker::getBackground() {
 	return background;
 }
 
+//TODO(Logan) -> Add an assert that the next level is incrementing properly.
 Level* BrickBreaker::getNextLevel() {
 	if (!p_currentStage) {
 		return NULL;

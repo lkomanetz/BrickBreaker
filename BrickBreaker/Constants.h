@@ -7,6 +7,7 @@
 #include "Engine/Input.h"
 #define OUT // Used to define out parameters versus IN parameters
 #define TRANSCOLOR SETCOLOR_ARGB(0, 255, 0, 255) // Magenta transparent color
+#define assert(expression) { if (!expression) { *(int*)0 = 0; } }
 
 //Graphic images
 const char NEBULA_IMAGE [] = "images\\orion.jpg";
