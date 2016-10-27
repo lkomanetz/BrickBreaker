@@ -11,6 +11,7 @@ class Input;
 #include <XInput.h>
 #include "../Constants.h"
 #include "GameError.h"
+#include <limits.h>
 
 // For high-definition mouse
 #ifndef HID_USAGE_PAGE_GENERIC

@@ -28,6 +28,8 @@ Input::Input() {
 		_controllers[i].vibrateTimeLeft = 0;
 		_controllers[i].vibrateTimeRight = 0;
 	}
+
+	_thumbstickDeadZone = GAMEPAD_THUMBSTICK_DEADZONE;
 }
 
 Input::~Input() {

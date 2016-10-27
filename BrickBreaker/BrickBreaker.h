@@ -33,6 +33,8 @@ private:
 	void renderLayout();
 	void destructCurrentLayout();
 	void showWinScreen();
+	void doDpadMovement();
+	void doThumbstickMovement();
 	Level* getNextLevel();
 	Stage* getStage(int stageNumber);
 	std::vector<Image> getBackground();

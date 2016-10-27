@@ -41,6 +41,15 @@ void BrickBreaker::initialize(HWND hwnd) {
 
 //TODO(Logan) -> Get the paddle moving with input.
 void BrickBreaker::update() {
+	if (p_input->isGamepadButtonPressed(0, GAMEPAD_DPAD_LEFT) ||
+		p_input->isGamepadButtonPressed(0, GAMEPAD_DPAD_RIGHT)) {
+		doDpadMovement();
+	}
+
+	if (p_input->getGamepadThumbX(0, GAMEPAD_LEFT_THUMB) != 0) {
+		doThumbstickMovement();
+	}
+
 	if (_currentLayout != NULL) {
 		for (UINT i = 0; i < 11; i++) {
 			for (UINT j = 0; j < 8; j++) {
@@ -60,6 +69,7 @@ void BrickBreaker::update() {
 		loadLevel();
 	}
 
+	_paddle.update(_frameTime);
 }
 
 void BrickBreaker::performAi() {
@@ -284,4 +294,53 @@ Level* BrickBreaker::getNextLevel() {
 	}
 
 	return pNextLevel;
+}
+
+void BrickBreaker::doDpadMovement() {
+	if (p_input->isGamepadButtonPressed(0, GAMEPAD_DPAD_LEFT) ||
+		p_input->isKeyDown(MOVE_PADDLE_LEFT)) {
+
+		if (_paddle.getX() > 0) {
+			_paddle.setX(_paddle.getX() - (_frameTime * MAX_PADDLE_SPEED));
+		}
+
+		return;
+	}
+
+
+	if (p_input->isGamepadButtonPressed(0, GAMEPAD_DPAD_RIGHT) ||
+		p_input->isKeyDown(MOVE_PADDLE_RIGHT)) {
+
+		if (_paddle.getWidth() + _paddle.getX() < GAME_WIDTH) {
+			_paddle.setX(_paddle.getX() + (_frameTime * MAX_PADDLE_SPEED));
+		}
+	}
+}
+
+void BrickBreaker::doThumbstickMovement() {
+	float thumbX = (float)p_input->getGamepadThumbX(0, GAMEPAD_LEFT_THUMB);
+	float distanceFromCenter = (thumbX > 0) ? (thumbX / SHRT_MAX) : (thumbX / SHRT_MIN);
+
+	bool isPaddleMovingLeft = thumbX < 0;
+	thumbX = MAX_PADDLE_SPEED * distanceFromCenter;
+
+	if (thumbX != 0) {
+		if (!isPaddleMovingLeft) {
+			if (_paddle.getWidth() + _paddle.getX() < GAME_WIDTH) {
+				_paddle.setX(_paddle.getX() + (_frameTime * thumbX));
+			}
+		}
+		else {
+			if (_paddle.getX() > 0) {
+				_paddle.setX(_paddle.getX() - (_frameTime * thumbX));
+			}
+		}
+	}
+
+	//TODO(Logan) -> Remove the DEBUG code
+#if DEBUG
+	char buffer[128];
+	int format = sprintf_s(buffer, "Thumb X: %f\n", distanceFromCenter);
+	OutputDebugStringA(buffer);
+#endif
 }

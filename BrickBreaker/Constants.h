@@ -4,6 +4,7 @@
 #define WIN32_LEAN_AND_MEAN
 
 #include <Windows.h>
+#include "Engine/Input.h"
 #define OUT // Used to define out parameters versus IN parameters
 #define TRANSCOLOR SETCOLOR_ARGB(0, 255, 0, 255) // Magenta transparent color
 
@@ -22,6 +23,7 @@ const bool FULLSCREEN = false;
 const UINT GAME_WIDTH = 640;
 const UINT GAME_HEIGHT = 480;
 const float FRAME_RATE = 200.0f;
+const float MAX_PADDLE_SPEED = 250.0f;
 const float MIN_FRAME_TIME = 1.0f / FRAME_RATE; // Minimum desired time for one frame
 const float MAX_FRAME_TIME = 1.0f / MIN_FRAME_TIME; // Maximum time used in game calculations
 
@@ -31,6 +33,8 @@ const float MAX_FRAME_TIME = 1.0f / MIN_FRAME_TIME; // Maximum time used in game
 //NOTE(Logan) -> Might need to do something like const UCHAR PADDLE_LEFT = VK_LEFT | GAMEPAD_DPAD_LEFT;
 // The idea is that PADDLE_LEFT maps to both keyboard left arrow and gamepad dpad left button
 const UCHAR NEXT_MAP = VK_LEFT;
+const UCHAR MOVE_PADDLE_LEFT = 0x41; //Keyboard_A
+const UCHAR MOVE_PADDLE_RIGHT = 0x44; //Keyboard_D
 
 template <typename T>
 inline void safeRelease(T& ptr) {
