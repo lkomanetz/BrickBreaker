@@ -344,3 +344,7 @@ void Input::vibrateControllers(float frameTime) {
 		}
 	}
 }
+
+float Input::getThumbstickDistanceFromCenter(float currentPosition) {
+	return (currentPosition > 0.0f) ? (currentPosition / SHRT_MAX) : (currentPosition / SHRT_MIN);
+}

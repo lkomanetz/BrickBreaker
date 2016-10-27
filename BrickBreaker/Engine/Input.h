@@ -105,6 +105,7 @@ public:
 	void setThumbstickDeadzone(short dz) { _thumbstickDeadZone = abs(dz); }
 	void setTriggerDeadzone(BYTE dz) { _triggerDeadZone = dz; }
 	short getThumbstickDeadzone() { return _thumbstickDeadZone; }
+	inline float getThumbstickDistanceFromCenter(float currentPosition);
 	BYTE getTriggerDeadzone() { return static_cast<BYTE>(_triggerDeadZone); }
 	int getMouseX() const { return _mouseX; }
 	int getMouseY() const { return _mouseY; }

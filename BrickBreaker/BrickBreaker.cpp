@@ -304,8 +304,6 @@ void BrickBreaker::doDpadMovement() {
 		if (_paddle.getX() > 0) {
 			_paddle.setX(_paddle.getX() - (_frameTime * MAX_PADDLE_SPEED));
 		}
-
-		return;
 	}
 
 
@@ -320,11 +318,10 @@ void BrickBreaker::doDpadMovement() {
 
 void BrickBreaker::doThumbstickMovement() {
 	float thumbX = (float)p_input->getGamepadThumbX(0, GAMEPAD_LEFT_THUMB);
-	//TODO(Logan) -> Look at moving this into the input class
-	float distanceFromCenter = (thumbX > 0) ? (thumbX / SHRT_MAX) : (thumbX / SHRT_MIN);
+	float distanceFromCenterX = p_input->getThumbstickDistanceFromCenter(thumbX);
 
 	bool isPaddleMovingLeft = thumbX < 0;
-	thumbX = MAX_PADDLE_SPEED * distanceFromCenter;
+	thumbX = MAX_PADDLE_SPEED * distanceFromCenterX;
 
 	if (thumbX != 0) {
 		if (!isPaddleMovingLeft) {
@@ -342,7 +339,7 @@ void BrickBreaker::doThumbstickMovement() {
 	//TODO(Logan) -> Remove the DEBUG code
 #if DEBUG
 	char buffer[128];
-	int format = sprintf_s(buffer, "Thumb X: %f\n", distanceFromCenter);
+	int format = sprintf_s(buffer, "Thumb X: %f\n", distanceFromCenterX);
 	OutputDebugStringA(buffer);
 #endif
 }
