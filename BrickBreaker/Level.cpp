@@ -43,6 +43,7 @@ void Level::construct() {
 	p_graphics = NULL;
 }
 
+//TODO(Logan) -> Check to see if we even need this method any longer.
 void Level::buildLayout() {
 	//string levelContent = getLayoutString();
 	//size_t size = _layoutString.size();

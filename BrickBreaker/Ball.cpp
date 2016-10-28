@@ -4,11 +4,11 @@ Ball::Ball() {
 	initialize();
 }
 
-Ball::Ball(Graphics* pGraphics, TextureManager* pTextureManager) {
+Ball::Ball(Game* pGame, TextureManager* pTextureManager) {
 	initialize();
 
 	GameObject::initialize(
-		pGraphics,
+		pGame,
 		_imageWidth,
 		_imageHeight,
 		_numberOfColumns,

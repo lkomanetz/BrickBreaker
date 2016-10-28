@@ -14,6 +14,7 @@ BrickBreaker::~BrickBreaker() {
 void BrickBreaker::initialize(HWND hwnd) {
 	_currentStageId = 1;
 	Game::initialize(hwnd);
+
 	//NOTE(Logan) -> Might be able to have one texture manager with all assets but it may not work.
 	_ballTexture = TextureManager(p_graphics, BALL_IMAGE);
 	_paddleTexture = TextureManager(p_graphics, PADDLE_IMAGE);
@@ -22,11 +23,11 @@ void BrickBreaker::initialize(HWND hwnd) {
 	_planetTexture = TextureManager(p_graphics, PLANET_IMAGE);
 	_background = getBackground();
 
-	_paddle = Paddle(p_graphics, &_paddleTexture);
-	_paddle.setX(GAME_WIDTH * 0.5f - _paddle.getWidth() * 0.5f);
-	_paddle.setY(GAME_HEIGHT - _paddle.getHeight() - 15.0f);
+	_paddle = Paddle(this, &_paddleTexture);
+	//_paddle.setX(GAME_WIDTH * 0.5f - _paddle.getWidth() * 0.5f);
+	//_paddle.setY(GAME_HEIGHT - _paddle.getHeight() - 15.0f);
 
-	_gameBall = Ball(p_graphics, &_ballTexture);
+	_gameBall = Ball(this, &_ballTexture);
 	_gameBall.setX(GAME_WIDTH * 0.5f - _gameBall.getWidth() * 0.5f);
 	_gameBall.setY(_paddle.getY() - 20.0f);
 	_gameBall.setScale(1.25f);
@@ -36,21 +37,12 @@ void BrickBreaker::initialize(HWND hwnd) {
 	p_currentLevel = p_currentStage->getLevel(1);
 	_currentLevelId = p_currentLevel->getId();
 	loadLevel();
+
 	return;
 }
 
 void BrickBreaker::update() {
-	if (p_input->isGamepadButtonPressed(0, GAMEPAD_DPAD_LEFT) ||
-		p_input->isGamepadButtonPressed(0, GAMEPAD_DPAD_RIGHT) ||
-		p_input->isKeyDown(MOVE_PADDLE_LEFT) ||
-		p_input->isKeyDown(MOVE_PADDLE_RIGHT)) {
-		doDpadMovement();
-	}
-
-	if (p_input->getGamepadThumbX(0, GAMEPAD_LEFT_THUMB) != 0) {
-		doThumbstickMovement();
-	}
-
+	_paddle.update(_frameTime);
 	if (_currentLayout != NULL) {
 		for (UINT i = 0; i < 11; i++) {
 			for (UINT j = 0; j < 8; j++) {
@@ -70,7 +62,6 @@ void BrickBreaker::update() {
 		loadLevel();
 	}
 
-	_paddle.update(_frameTime);
 }
 
 void BrickBreaker::performAi() {
@@ -182,7 +173,7 @@ void BrickBreaker::loadLevel() {
 			continue;
 		}
 
-		Brick brick = Brick(p_graphics, &_brickTextures);
+		Brick brick = Brick(this, &_brickTextures);
 
 		BrickType type = static_cast<BrickType>(levelContent[i] - '0');
 		brick.setType(type);
@@ -297,44 +288,4 @@ Level* BrickBreaker::getNextLevel() {
 	}
 
 	return pNextLevel;
-}
-
-void BrickBreaker::doDpadMovement() {
-	if (p_input->isGamepadButtonPressed(0, GAMEPAD_DPAD_LEFT) ||
-		p_input->isKeyDown(MOVE_PADDLE_LEFT)) {
-
-		if (_paddle.getX() > 0) {
-			_paddle.setX(_paddle.getX() - (_frameTime * MAX_PADDLE_SPEED));
-		}
-	}
-
-
-	if (p_input->isGamepadButtonPressed(0, GAMEPAD_DPAD_RIGHT) ||
-		p_input->isKeyDown(MOVE_PADDLE_RIGHT)) {
-
-		if (_paddle.getWidth() + _paddle.getX() < GAME_WIDTH) {
-			_paddle.setX(_paddle.getX() + (_frameTime * MAX_PADDLE_SPEED));
-		}
-	}
-}
-
-void BrickBreaker::doThumbstickMovement() {
-	float thumbX = (float)p_input->getGamepadThumbX(0, GAMEPAD_LEFT_THUMB);
-	float distanceFromCenterX = p_input->getThumbstickDistanceFromCenter(thumbX);
-
-	bool isPaddleMovingLeft = thumbX < 0;
-	thumbX = MAX_PADDLE_SPEED * distanceFromCenterX;
-
-	if (thumbX != 0) {
-		if (!isPaddleMovingLeft) {
-			if (_paddle.getWidth() + _paddle.getX() < GAME_WIDTH) {
-				_paddle.setX(_paddle.getX() + (_frameTime * thumbX));
-			}
-		}
-		else {
-			if (_paddle.getX() > 0) {
-				_paddle.setX(_paddle.getX() - (_frameTime * thumbX));
-			}
-		}
-	}
 }

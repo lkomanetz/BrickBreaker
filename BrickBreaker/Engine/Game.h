@@ -38,5 +38,7 @@ public:
 	virtual void performAi() = 0;
 	virtual void calculateCollisions() = 0;
 	LRESULT messageHandler(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+	Input* getInput() { return p_input; }
+	Graphics* getGraphics() { return p_graphics; }
 };
 #endif

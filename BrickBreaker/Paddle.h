@@ -10,7 +10,10 @@ private:
 	void initialize();
 public:
 	Paddle();
-	Paddle(Graphics* pGraphics, TextureManager* pTextureManager);
+	Paddle(Game* pGame, TextureManager* pTextureManager);
+	void update(float frameTime);
+	void doDpadMovement(float frameTime);
+	void doThumbstickMovement(float frameTime);
 };
 
 #endif

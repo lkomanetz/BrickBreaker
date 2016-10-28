@@ -6,7 +6,7 @@
 #include "TextureManager.h"
 
 class Image {
-private:
+protected:
 	Graphics* p_graphics;
 	TextureManager* p_textureManager;
 	SpriteData _spriteData;
@@ -24,7 +24,6 @@ private:
 	bool _animationComplete;
 
 protected:
-	bool initialize(Graphics* p_graphics, int width, int height, int ncols, TextureManager* textureManager);
 	void construct();
 
 public:
@@ -36,6 +35,7 @@ public:
 	Image& operator=(const Image& rObj);
 
 	inline virtual bool isAnimated() { return (_endFrame - _startFrame) > 0; }
+	virtual bool initialize(Graphics* p_graphics, int width, int height, int ncols, TextureManager* textureManager);
 	virtual void draw(COLOR_ARGB color = GraphicsNS::WHITE);
 	virtual void draw(SpriteData spriteData, COLOR_ARGB color = GraphicsNS::WHITE);
 	virtual void update(float frameTime);

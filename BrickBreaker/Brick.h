@@ -20,7 +20,7 @@ private:
 	void initialize();
 public:
 	Brick();
-	Brick(Graphics* pGraphics, TextureManager* textureManager);
+	Brick(Game* pGame, TextureManager* textureManager);
 	Brick(const Brick& obj);
 	virtual ~Brick();
 

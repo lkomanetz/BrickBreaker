@@ -4,10 +4,10 @@ Brick::Brick() {
 	initialize();
 }
 
-Brick::Brick(Graphics* pGraphics, TextureManager* textureManager) {
+Brick::Brick(Game* pGame, TextureManager* textureManager) {
 	initialize();
 	GameObject::initialize(
-		pGraphics,
+		pGame,
 		_imageWidth,
 		_imageHeight,
 		_numberOfColumns,

@@ -13,7 +13,7 @@ private:
 	void initialize();
 public:
 	Ball();
-	Ball(Graphics* pGraphics, TextureManager* pTextureManager);
+	Ball(Game* pGame, TextureManager* pTextureManager);
 };
 
 #endif
