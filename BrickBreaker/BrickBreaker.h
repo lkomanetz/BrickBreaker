@@ -11,6 +11,7 @@
 #include "FileReader.h"
 #include <vector>
 
+//TODO(Logan) -> Figure out a way to store a list of all game objects to iterate for updating.
 class BrickBreaker : public Game {
 private:
 	Paddle _paddle;
