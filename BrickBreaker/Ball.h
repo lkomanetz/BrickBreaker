@@ -14,6 +14,8 @@ private:
 public:
 	Ball();
 	Ball(Game* pGame, TextureManager* pTextureManager);
+
+	void update(float frameTime);
 };
 
 #endif

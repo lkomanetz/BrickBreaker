@@ -14,6 +14,7 @@ protected:
 	UINT _imageWidth;
 	UINT _imageHeight;
 	UINT _numberOfColumns;
+	bool _active;
 
 public:
 	GameObject();
@@ -23,6 +24,7 @@ public:
 	GameObject& operator=(const GameObject& rightObj);
 
 	bool initialize(Game* pGame, int width, int height, int columnCount, TextureManager* pTextureManager);
+	bool isActive() { return _active; }
 	void setHealth(UINT totalHealth) { _health = totalHealth; }
 	UINT getHealth() { return _health; }
 	void update(float frameTime);

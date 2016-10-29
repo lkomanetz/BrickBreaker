@@ -32,4 +32,11 @@ void Brick::initialize() {
 	_imageWidth = 59;
 	_imageHeight = 18;
 	_numberOfColumns = 3;
+	_spriteData.width = _imageWidth;
+	_spriteData.height = _imageHeight;
+	_spriteData.rectangle.bottom = _imageHeight;
+	_spriteData.rectangle.right = _imageWidth;
+	_startFrame = 0;
+	_endFrame = 0;
+	_currentFrame = _startFrame;
 }

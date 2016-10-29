@@ -11,7 +11,6 @@ BrickBreaker::~BrickBreaker() {
 	releaseAll();
 }
 
-//TODO(Logan) -> Make sure the Image > GameObject > Brick/Ball/Paddle classes are ready for physics code and clean.
 void BrickBreaker::initialize(HWND hwnd) {
 	_currentStageId = 1;
 	Game::initialize(hwnd);
@@ -24,17 +23,8 @@ void BrickBreaker::initialize(HWND hwnd) {
 	_planetTexture = TextureManager(p_graphics, PLANET_IMAGE);
 	_background = getBackground();
 
-	//TODO(Logan) -> Clean up commented out code.
 	_paddle = Paddle(this, &_paddleTexture);
-	//_paddle.setX(GAME_WIDTH * 0.5f - _paddle.getWidth() * 0.5f);
-	//_paddle.setY(GAME_HEIGHT - _paddle.getHeight() - 15.0f);
-
-
-	//TODO(Logan) -> Set Ball initial X and Y like paddle is currently.
 	_gameBall = Ball(this, &_ballTexture);
-	_gameBall.setX(GAME_WIDTH * 0.5f - _gameBall.getWidth() * 0.5f);
-	_gameBall.setY(_paddle.getY() - 20.0f);
-	_gameBall.setScale(1.25f);
 
 	loadStagesFromFile();
 	p_currentStage = getStage(_currentStageId);
@@ -96,7 +86,6 @@ void BrickBreaker::calculateCollisions() {
 	return;
 }
 
-//TODO(Logan) -> Make sure everything will be released properly.
 void BrickBreaker::releaseAll() {
 	vector<Image>::iterator iter = _background.begin();
 	while (iter != _background.end()) {
@@ -111,7 +100,6 @@ void BrickBreaker::releaseAll() {
 	return;
 }
 
-//TODO(Logan) -> Make sure everything will be reset properly.
 void BrickBreaker::resetAll() {
 	vector<Image>::iterator iter = _background.begin();
 	while (iter != _background.end()) {
@@ -273,8 +261,8 @@ vector<Image> BrickBreaker::getBackground() {
 	return background;
 }
 
-//TODO(Logan) -> Add an assert that the next level is incrementing properly.
 Level* BrickBreaker::getNextLevel() {
+	UINT currentLevel = _currentLevelId;
 	if (!p_currentStage) {
 		return NULL;
 	}
@@ -292,6 +280,11 @@ Level* BrickBreaker::getNextLevel() {
 		_currentLevelId = 1;
 		pNextLevel = p_currentStage->getLevel(_currentLevelId);
 	}
+
+#if DEBUG
+	assert(pNextLevel != NULL);
+	assert(pNextLevel->getId() == ++currentLevel);
+#endif
 
 	return pNextLevel;
 }

@@ -29,7 +29,6 @@ public:
 	std::string getName() { return _name; }
 	int getId() const { return _id; }
 	std::string getLayoutString() { return _layoutString; }
-	void buildLayout();
 
 };
 

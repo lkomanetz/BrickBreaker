@@ -5,6 +5,7 @@ GameObject::GameObject() :
 
 	//TODO(Logan) -> Add physics related initialization here.
 	_health = 0;
+	_active = true;
 }
 
 GameObject::GameObject(const GameObject& obj) :
