@@ -7,8 +7,20 @@
 #include "Image.h"
 #include "Input.h"
 
+enum class CollisionType {
+	None,
+	Circle,
+	Box,
+	RotatedBox
+};
+
+//TODO(Logan) -> Add physics code possibly into its own separate class so a GameObject can have multiple physics objects.
+// The check for physics should return true if colliding, the point of the collision, and the entity it is colliding with.
 class GameObject : public Image {
 protected:
+	CollisionType _collisionType;
+	VECTOR2 _center;
+	float _collisionRadius;
 	Input* p_input;
 	UINT _health;
 	UINT _imageWidth;

@@ -18,6 +18,7 @@ class Graphics;
 #define LP_3D LPDIRECT3D9
 #define LP_SPRITE LPD3DXSPRITE
 #define LP_TEXTURE LPDIRECT3DTEXTURE9
+#define VECTOR2 D3DXVECTOR2
 
 // Color defines
 #define COLOR_ARGB DWORD
