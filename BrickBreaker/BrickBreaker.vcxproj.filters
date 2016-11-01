@@ -113,5 +113,8 @@
     <ClInclude Include="Paddle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Physics.h">
+      <Filter>GameEngine\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -164,6 +164,7 @@
     <ClInclude Include="FileReader.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="Paddle.h" />
+    <ClInclude Include="Physics.h" />
     <ClInclude Include="Stage.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

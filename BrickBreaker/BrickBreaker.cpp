@@ -83,6 +83,9 @@ void BrickBreaker::render() {
 }
 
 void BrickBreaker::calculateCollisions() {
+	if (_gameBall.isCollidingWith(_paddle)) {
+		// do something
+	}
 	return;
 }
 
