@@ -6,7 +6,7 @@
 #include "Game.h"
 #include "Image.h"
 #include "Input.h"
-#include "Physics.h"
+#include "Physics.h" // Figure out how to fix C2143 error because of this and GameObject.h
 #include <vector>
 
 //TODO(Logan) -> Add physics code possibly into its own separate class so a GameObject can have multiple physics objects.

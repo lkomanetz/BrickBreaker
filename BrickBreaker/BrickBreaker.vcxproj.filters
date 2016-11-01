@@ -66,6 +66,9 @@
     <ClCompile Include="Paddle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Physics.cpp">
+      <Filter>GameEngine\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Constants.h">
@@ -113,7 +116,7 @@
     <ClInclude Include="Paddle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Physics.h">
+    <ClInclude Include="Engine\Physics.h">
       <Filter>GameEngine\Header Files</Filter>
     </ClInclude>
   </ItemGroup>

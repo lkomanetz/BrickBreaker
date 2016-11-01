@@ -15,7 +15,6 @@ class PhysicsObject {
 private:
 	GameObject* _gameObject;
 	CollisionType _type;
-	// VECTOR2 _center;
 	float _radius;
 	VECTOR2 _distanceSquared;
 	float _sumRadiiSquared;
