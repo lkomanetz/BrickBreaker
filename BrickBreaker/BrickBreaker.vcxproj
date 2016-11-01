@@ -142,7 +142,6 @@
     <ClCompile Include="Engine\Graphics.cpp" />
     <ClCompile Include="Engine\Image.cpp" />
     <ClCompile Include="Engine\Input.cpp" />
-    <ClCompile Include="Engine\Physics.cpp" />
     <ClCompile Include="Engine\TextureManager.cpp" />
     <ClCompile Include="FileReader.cpp" />
     <ClCompile Include="Level.cpp" />
@@ -161,7 +160,6 @@
     <ClInclude Include="Engine\Graphics.h" />
     <ClInclude Include="Engine\Image.h" />
     <ClInclude Include="Engine\Input.h" />
-    <ClInclude Include="Engine\Physics.h" />
     <ClInclude Include="Engine\TextureManager.h" />
     <ClInclude Include="FileReader.h" />
     <ClInclude Include="Level.h" />
