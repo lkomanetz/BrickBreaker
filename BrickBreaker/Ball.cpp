@@ -35,4 +35,24 @@ void Ball::initialize() {
 
 void Ball::update(float frameTime) {
 	GameObject::update(frameTime);
+	_spriteData.x += frameTime * _velocity.x;
+	_spriteData.y += frameTime * _velocity.y;
+
+	if (_spriteData.x > GAME_WIDTH - _imageWidth) {
+		_spriteData.x = GAME_WIDTH - _imageWidth * getScale();
+		_velocity.x = -_velocity.x;
+	}
+	else if (_spriteData.x < 0) {
+		_spriteData.x = 0;
+		_velocity.x = -_velocity.x;
+	}
+
+	if (_spriteData.y > GAME_HEIGHT - _imageHeight * getScale()) {
+		_spriteData.y = GAME_HEIGHT - _imageHeight * getScale();
+		_velocity.y = -_velocity.y;
+	}
+	else if (_spriteData.y < 0) {
+		_spriteData.y = 0;
+		_velocity.y = -_velocity.y;
+	}
 }

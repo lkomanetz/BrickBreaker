@@ -103,6 +103,16 @@ public:
 	void drawSprite(const SpriteData &spriteData, COLOR_ARGB color);
 	void spriteBegin() { p_sprite->Begin(D3DXSPRITE_ALPHABLEND); }
 	void spriteEnd() { p_sprite->End(); }
+
+	static float Vector2Length(const VECTOR2 *v) { return D3DXVec2Length(v); }
+	static float Vector2Dot(const VECTOR2* v1, const VECTOR2* v2) { return D3DXVec2Dot(v1, v2); }
+	static void Vector2Normalize(VECTOR2* v) { D3DXVec2Normalize(v, v); }
+	static void Vector2Square(VECTOR2* v) { v->x *= v->x; v->y *= v->y; }
+	static VECTOR2* Vector2Transform(VECTOR2* v, D3DXMATRIX *m) { return D3DXVec2TransformCoord(v, v, m); }
+
+	LP_3D getDirect3d() { return p_direct3d; }
+	LP_3DDEVICE get3dDevice() { return p_device3d; }
+	LP_SPRITE getSprite() { return p_sprite; }
 };
 
 #endif

@@ -36,6 +36,7 @@ protected:
 	float _radiusSquared;
 	float _force;
 	float _gravity;
+	bool _rotatedBoxReady;
 
 	Input* p_input;
 	UINT _health;
@@ -45,6 +46,13 @@ protected:
 	bool _active;
 
 	virtual bool collideCircle(GameObject& otherObj, VECTOR2& collisionVector);
+	virtual bool collideBox(GameObject& otherObj, VECTOR2& collisionVector);
+	virtual bool collideRotatedBox(GameObject& otherObj, VECTOR2& collisionVector);
+	virtual bool collideRotatedBoxCircle(GameObject& otherObj, VECTOR2& collisionVector);
+
+	void computeRotatedBox();
+	bool projectionsOverlap(GameObject& otherObj);
+	bool collideCornerCircle(VECTOR2 corner, GameObject& otherObj, VECTOR2& collisionVector);
 
 public:
 	GameObject();
@@ -56,9 +64,11 @@ public:
 	bool initialize(Game* pGame, int width, int height, int columnCount, TextureManager* pTextureManager);
 	void update(float frameTime);
 	virtual void performAi(float frameTime, GameObject& otherObj);
+	void addGravitationalForce(GameObject* otherObj, float frameTime);
 
 	bool isActive() { return _active; }
 	bool isCollidingWith(GameObject& otherObj, VECTOR2& collisionVector);
+	bool isOutsideRectangle(RECT rect);
 
 	virtual const VECTOR2* getCenter();
 	virtual const RECT& getEdge() const { return _edge; }

@@ -26,6 +26,8 @@ void BrickBreaker::initialize(HWND hwnd) {
 	_paddle = Paddle(this, &_paddleTexture);
 	_gameBall = Ball(this, &_ballTexture);
 
+	_gameBall.setVelocity(VECTOR2(100, 100));
+
 	loadStagesFromFile();
 	p_currentStage = getStage(_currentStageId);
 	p_currentLevel = p_currentStage->getLevel(1);
@@ -36,6 +38,7 @@ void BrickBreaker::initialize(HWND hwnd) {
 }
 
 void BrickBreaker::update() {
+	_gameBall.update(_frameTime);
 	_paddle.update(_frameTime);
 	if (_currentLayout != NULL) {
 		for (UINT i = 0; i < 11; i++) {
