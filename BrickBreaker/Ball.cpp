@@ -32,7 +32,7 @@ void Ball::initialize() {
 	_currentFrame = _startFrame;
 	_spriteData.scale = 1.25f;
 	_collisionType = CollisionType::Circle;
-	_radius = _imageWidth / 2;
+	_radius = _imageWidth / 2 * getScale();
 	_mass = 0.0f;
 }
 

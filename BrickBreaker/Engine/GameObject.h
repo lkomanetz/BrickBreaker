@@ -6,7 +6,6 @@
 #include "Game.h"
 #include "Image.h"
 #include "Input.h"
-#include <vector>
 
 namespace gameObjectNS {
 	const float GRAVITY = 6.67428e-11f; // Gravitation constant
@@ -16,25 +15,30 @@ enum class CollisionType {
 	None,
 	Circle,
 	Box,
-	RotatedBox
+	RotatedBox,
+	PixelPerfect
 };
 
 class GameObject : public Image {
 protected:
 	CollisionType _collisionType;
 	VECTOR2 _center;
+	VECTOR2 _collisionCenter;
 	float _radius;
 	VECTOR2 _distanceSquared;
 	float _sumRadiiSquared;
 	RECT _edge; // For Box and RotatedBox collision detection.  Specifies collision box relative to center of GameObject.
 	VECTOR2 _corners[4]; // Used fr RotatedBox collision detection.
 	VECTOR2 _edge01, _edge03; // Edges used for projections.
+	float _edge01Min, _edge01Max, _edge03Min, _edge03Max; // Min and Max projections
 	VECTOR2 _velocity;
 	VECTOR2 _deltaVelocity;
 	float _mass;
 	float _radiusSquared;
 	float _force;
 	float _gravity;
+	bool _rotatedBoxReady;
+	DWORD _pixelsColliding;
 
 	Input* p_input;
 	UINT _health;
@@ -45,6 +49,12 @@ protected:
 
 	virtual bool collideCircle(GameObject& otherObj, VECTOR2& collisionVector);
 	virtual bool collideBox(GameObject& otherObj, VECTOR2& collisionVector);
+	virtual bool collideRotatedBox(GameObject& otherObj, VECTOR2& collisionVector);
+	virtual bool collideRotatedBoxCircle(GameObject& otherObj, VECTOR2& collisionVector);
+
+	void computeRotatedBox();
+	bool projectionsOverlap(GameObject& otherObj, VECTOR2& collisionVector);
+	bool collideCornerCircle(VECTOR2 corner, GameObject& otherObj, VECTOR2& collisionVector);
 
 public:
 	GameObject();
@@ -79,6 +89,7 @@ public:
 	virtual void setMass(float mass) { _mass = mass; }
 	virtual void setGravity(float gravity) { _gravity = gravity; }
 	virtual void setCollisionRadius(float radius) { _radius = radius; }
+	virtual void setCollisionCenter(VECTOR2 center) { _collisionCenter = center; }
 };
 
 #endif
