@@ -19,7 +19,6 @@ GameObject::GameObject() :
 	_deltaVelocity.y = 0.0f;
 	_collisionType = CollisionType::None;
 	_gravity = gameObjectNS::GRAVITY;
-	_rotatedBoxReady = false;
 }
 
 GameObject::GameObject(const GameObject& obj) :
@@ -35,7 +34,6 @@ GameObject::GameObject(const GameObject& obj) :
 	_deltaVelocity = obj._deltaVelocity;
 	_collisionType = obj._collisionType;
 	_gravity = obj._gravity;
-	_rotatedBoxReady = obj._rotatedBoxReady;
 }
 
 GameObject& GameObject::operator=(const GameObject& obj) {
@@ -51,7 +49,6 @@ GameObject& GameObject::operator=(const GameObject& obj) {
 	_deltaVelocity = obj._deltaVelocity;
 	_collisionType = obj._collisionType;
 	_gravity = obj._gravity;
-	_rotatedBoxReady = obj._rotatedBoxReady;
 
 	return *this;
 }
@@ -61,7 +58,6 @@ void GameObject::update(float frameTime) {
 	_deltaVelocity.x = 0;
 	_deltaVelocity.y = 0;
 	Image::update(frameTime);
-	_rotatedBoxReady = false;
 }
 
 void GameObject::performAi(float frameTime, GameObject& otherObj) {}
@@ -81,20 +77,6 @@ bool GameObject::isCollidingWith(GameObject& otherObj, VECTOR2& collisionVector)
 	}
 	if (_collisionType == CollisionType::Box && otherObj.getCollisionType() == CollisionType::Box) {
 		return collideBox(otherObj, collisionVector);
-	}
-	if (_collisionType != CollisionType::Circle && otherObj.getCollisionType() != CollisionType::Circle) {
-		return collideRotatedBox(otherObj, collisionVector);
-	}
-	else {
-		if (_collisionType == CollisionType::Circle) {
-			bool collide = otherObj.collideRotatedBoxCircle(*this, collisionVector);
-			collisionVector *= -1;
-
-			return collide;
-		}
-		else {
-			return collideRotatedBoxCircle(otherObj, collisionVector);
-		}
 	}
 
 	return false;
@@ -166,220 +148,4 @@ bool GameObject::isOutsideRectangle(RECT rect) {
 	}
 
 	return false;
-}
-
-// Compute corners of rotated box, projection edges and min/max projections
-// 0---1 corner numbers
-// |   |
-// 3---2
-void GameObject::computeRotatedBox() {
-	if (_rotatedBoxReady) {
-		return;
-	}
-
-	VECTOR2 rotatedX(cos(_spriteData.angle), sin(_spriteData.angle));
-	VECTOR2 rotatedY(-sin(_spriteData.angle), cos(_spriteData.angle));
-	const VECTOR2* center = getCenter();
-	_corners[0] = *center + rotatedX * ((float)_edge.left * getScale()) + rotatedY * ((float)_edge.top * getScale());
-	_corners[1] = *center + rotatedX * ((float)_edge.right * getScale()) + rotatedY * ((float)_edge.top * getScale());
-	_corners[2] = *center + rotatedX * ((float)_edge.right * getScale()) + rotatedY * ((float)_edge.bottom * getScale());
-	_corners[3] = *center + rotatedX * ((float)_edge.left * getScale()) + rotatedY * ((float)_edge.bottom * getScale());
-
-	// _corners[0] is used as the origin point
-	_edge01 = VECTOR2(_corners[1].x - _corners[0].x, _corners[1].y - _corners[0].y);
-	_edge03 = VECTOR2(_corners[3].x - _corners[0].x, _corners[3].y - _corners[0].y);
-
-	p_graphics->Vector2Normalize(&_edge01);
-	p_graphics->Vector2Normalize(&_edge03);
-
-	float projection = p_graphics->Vector2Dot(&_edge01, &_corners[0]);
-	_edge01Min = projection;
-	_edge01Max = projection;
-
-	// Project onto edge01
-	projection = p_graphics->Vector2Dot(&_edge01, &_corners[1]);
-	if (projection < _edge01Min) {
-		_edge01Min = projection;
-	}
-	else if (projection > _edge01Max) {
-		_edge01Max = projection;
-	}
-
-	// Project onto edge03
-	projection = p_graphics->Vector2Dot(&_edge03, &_corners[0]);
-	_edge03Min = projection;
-	_edge03Max = projection;
-	projection = p_graphics->Vector2Dot(&_edge03, &_corners[3]);
-	if (projection < _edge03Min) {
-		_edge03Min = projection;
-	}
-	else if (projection > _edge03Max) {
-		_edge03Max = projection;
-	}
-
-	_rotatedBoxReady = true;
-}
-
-bool GameObject::projectionsOverlap(GameObject& otherObj) {
-	float projection, min01, max01, min03, max03;
-
-	// project the other box onto edge01
-	projection = p_graphics->Vector2Dot(&_edge01, otherObj.getCorner(0));
-	min01 = projection;
-	max01 = projection;
-
-	// for the other remaining corners
-	for (int corner = 1; corner < 4; corner++) {
-		projection = p_graphics->Vector2Dot(&_edge01, otherObj.getCorner(corner));
-		if (projection < min01) {
-			min01 = projection;
-		}
-		else if (projection > max01) {
-			max01 = projection;
-		}
-	}
-
-	// This checks to see if the projections are overlapping
-	if (min01 > _edge01Max || max01 < _edge01Min) {
-		return false; 
-	}
-
-	// project the other box onto edge03
-	projection = p_graphics->Vector2Dot(&_edge03, otherObj.getCorner(0));
-	min03 = projection;
-	max03 = projection;
-
-	for (int corner = 1; corner < 4; corner++) {
-		projection = p_graphics->Vector2Dot(&_edge03, otherObj.getCorner(corner));
-
-		if (projection, min03) {
-			min03 = projection;
-		}
-		else if (projection > max03) {
-			max03 = projection;
-		}
-	}
-
-	// This checks to see if the projections are overlapping
-	if (min03 > _edge03Max || max03 < _edge03Min) {
-		return false;  
-	}
-
-	return true;
-}
-
-// Called by collideRotatedBoxCircle()
-bool GameObject::collideCornerCircle(VECTOR2 corner, GameObject& otherObj, VECTOR2& collisionVector) {
-	_distanceSquared = corner - *otherObj.getCenter();
-	Graphics::Vector2Square(&_distanceSquared);
-
-	_sumRadiiSquared = otherObj.getRadius() * otherObj.getScale();
-	_sumRadiiSquared *= _sumRadiiSquared;
-
-	if (_distanceSquared.x + _distanceSquared.y <= _sumRadiiSquared) {
-		collisionVector = *otherObj.getCenter() - corner;
-		return true;
-	}
-
-	return false;
-}
-
-bool GameObject::collideRotatedBox(GameObject& otherObj, VECTOR2& collisionVector) {
-	computeRotatedBox();
-	otherObj.computeRotatedBox();
-
-	if (projectionsOverlap(otherObj) && otherObj.projectionsOverlap(*this)) {
-		collisionVector = *otherObj.getCenter() - *getCenter();
-		return true;
-	}
-
-	return false;
-}
-
-bool GameObject::collideRotatedBoxCircle(GameObject& otherObj, VECTOR2& collisionVector) {
-	float overlap01, overlap03;
-	float min01, min03, max01, max03, center01, center03;
-	computeRotatedBox();
-
-	center01 = p_graphics->Vector2Dot(&_edge01, otherObj.getCenter());
-	_other01Min = center01 - otherObj.getRadius() * otherObj.getScale();
-	_other01Max = center01 - otherObj.getRadius() * otherObj.getScale();
-
-	if (_other01Min > _edge01Max || _other01Max < _edge01Min) {
-		return false; // Projections aren't overlapping so no collision possible.
-	}
-
-	center03 = p_graphics->Vector2Dot(&_edge03, otherObj.getCenter());
-	_other03Min = center03 - otherObj.getRadius() * otherObj.getScale();
-	_other03Max = center03 - otherObj.getRadius() * otherObj.getScale();
-
-	if (_other03Min > _edge03Max || _other03Max < _edge03Min) {
-		return false; // Projections aren't overlapping so no collision possible.
-	}
-
-	if (center01 < _edge01Min && center03 < _edge03Min) {
-		return collideCornerCircle(_corners[0], otherObj, collisionVector);
-	}
-	if (center01 > _edge01Max && center03 < _edge03Min) {
-		return collideCornerCircle(_corners[1], otherObj, collisionVector);
-	}
-	if (center01 > _edge01Max && center03 > _edge03Max) {
-		return collideCornerCircle(_corners[2], otherObj, collisionVector);
-	}
-	if (center01 < _edge01Min && center03 > _edge03Max) {
-		return collideCornerCircle(_corners[3], otherObj, collisionVector);
-	}
-
-	if (_edge01Min < _other01Min) {
-		overlap01 = _edge01Max - _other01Min;
-		collisionVector = _corners[1] - _corners[0];
-	}
-	else {
-		overlap01 = _other01Max - _edge01Min;
-		collisionVector = _corners[0] - _corners[1];
-	}
-
-	if (_edge03Min < _other03Min) {
-		overlap03 = _edge03Max - _other03Min;
-		if (overlap03 < overlap01) {
-			collisionVector = _corners[3] - _corners[0];
-		}
-	}
-	else {
-		overlap03 = _other03Max - _edge03Min;
-		if (overlap03 < overlap01) {
-			collisionVector = _corners[0] - _corners[3];
-		}
-	}
-
-	return true;
-}
-
-void GameObject::bounce(GameObject& otherObj, VECTOR2& collisionVector) {
-	VECTOR2 velocityDiff = otherObj.getVelocity() - _velocity;
-	VECTOR2 collisionUnit = collisionVector;
-	Graphics::Vector2Normalize(&collisionUnit);
-
-	float collisionUnitDotVectorDiff = Graphics::Vector2Dot(&collisionUnit, &velocityDiff);
-	float massRatio = 2.0f;
-
-	if (this->getMass() != 0) {
-		massRatio *= (otherObj.getMass() / (this->getMass() + otherObj.getMass()));
-	}
-
-	if (massRatio < 0.1f) {
-		massRatio = 0.1f;
-	}
-
-	VECTOR2 cv;
-	int count = 10; // loop limit
-	do {
-		setX(getX() - collisionUnit.x);
-		setY(getY() - collisionUnit.y);
-		_rotatedBoxReady = false;
-		--count;
-	} while (this->isCollidingWith(otherObj, cv) && count);
-
-	//bounce
-	_deltaVelocity += ((massRatio * collisionUnitDotVectorDiff) * collisionUnit);
 }

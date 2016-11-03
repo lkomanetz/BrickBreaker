@@ -29,15 +29,12 @@ protected:
 	RECT _edge; // For Box and RotatedBox collision detection.  Specifies collision box relative to center of GameObject.
 	VECTOR2 _corners[4]; // Used fr RotatedBox collision detection.
 	VECTOR2 _edge01, _edge03; // Edges used for projections.
-	float _edge01Min, _edge01Max, _edge03Min, _edge03Max; // Min and Max projections
-	float _other01Min, _other01Max, _other03Min, _other03Max;
 	VECTOR2 _velocity;
 	VECTOR2 _deltaVelocity;
 	float _mass;
 	float _radiusSquared;
 	float _force;
 	float _gravity;
-	bool _rotatedBoxReady;
 
 	Input* p_input;
 	UINT _health;
@@ -48,12 +45,6 @@ protected:
 
 	virtual bool collideCircle(GameObject& otherObj, VECTOR2& collisionVector);
 	virtual bool collideBox(GameObject& otherObj, VECTOR2& collisionVector);
-	virtual bool collideRotatedBox(GameObject& otherObj, VECTOR2& collisionVector);
-	virtual bool collideRotatedBoxCircle(GameObject& otherObj, VECTOR2& collisionVector);
-
-	void computeRotatedBox();
-	bool projectionsOverlap(GameObject& otherObj);
-	bool collideCornerCircle(VECTOR2 corner, GameObject& otherObj, VECTOR2& collisionVector);
 
 public:
 	GameObject();
@@ -66,7 +57,6 @@ public:
 	void update(float frameTime);
 	virtual void performAi(float frameTime, GameObject& otherObj);
 	void addGravitationalForce(GameObject* otherObj, float frameTime);
-	void bounce(GameObject& otherObj, VECTOR2& collisionVector);
 
 	bool isActive() { return _active; }
 	bool isCollidingWith(GameObject& otherObj, VECTOR2& collisionVector);
