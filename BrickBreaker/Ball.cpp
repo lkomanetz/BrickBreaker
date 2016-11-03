@@ -31,6 +31,9 @@ void Ball::initialize() {
 	_endFrame = 0;
 	_currentFrame = _startFrame;
 	_spriteData.scale = 1.25f;
+	_collisionType = CollisionType::Circle;
+	_radius = _imageWidth / 2;
+	_mass = 0.0f;
 }
 
 void Ball::update(float frameTime) {

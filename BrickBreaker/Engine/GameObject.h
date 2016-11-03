@@ -30,6 +30,7 @@ protected:
 	VECTOR2 _corners[4]; // Used fr RotatedBox collision detection.
 	VECTOR2 _edge01, _edge03; // Edges used for projections.
 	float _edge01Min, _edge01Max, _edge03Min, _edge03Max; // Min and Max projections
+	float _other01Min, _other01Max, _other03Min, _other03Max;
 	VECTOR2 _velocity;
 	VECTOR2 _deltaVelocity;
 	float _mass;
@@ -40,8 +41,8 @@ protected:
 
 	Input* p_input;
 	UINT _health;
-	UINT _imageWidth;
-	UINT _imageHeight;
+	int _imageWidth;
+	int _imageHeight;
 	UINT _numberOfColumns;
 	bool _active;
 
@@ -65,6 +66,7 @@ public:
 	void update(float frameTime);
 	virtual void performAi(float frameTime, GameObject& otherObj);
 	void addGravitationalForce(GameObject* otherObj, float frameTime);
+	void bounce(GameObject& otherObj, VECTOR2& collisionVector);
 
 	bool isActive() { return _active; }
 	bool isCollidingWith(GameObject& otherObj, VECTOR2& collisionVector);

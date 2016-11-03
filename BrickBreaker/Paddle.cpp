@@ -29,6 +29,11 @@ void Paddle::initialize() {
 	_endFrame = 0;
 	_currentFrame = _startFrame;
 	_numberOfColumns = 0;
+	_edge.top = -_imageHeight / 2;
+	_edge.bottom = _imageHeight / 2;
+	_edge.left = -_imageWidth / 2;
+	_edge.right = _imageWidth / 2;
+	_collisionType = CollisionType::Box;
 }
 
 void Paddle::update(float frameTime) {

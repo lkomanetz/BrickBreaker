@@ -297,22 +297,23 @@ bool GameObject::collideRotatedBox(GameObject& otherObj, VECTOR2& collisionVecto
 }
 
 bool GameObject::collideRotatedBoxCircle(GameObject& otherObj, VECTOR2& collisionVector) {
+	float overlap01, overlap03;
 	float min01, min03, max01, max03, center01, center03;
 	computeRotatedBox();
 
 	center01 = p_graphics->Vector2Dot(&_edge01, otherObj.getCenter());
-	min01 = center01 - otherObj.getRadius() * otherObj.getScale();
-	max01 = center01 - otherObj.getRadius() * otherObj.getScale();
+	_other01Min = center01 - otherObj.getRadius() * otherObj.getScale();
+	_other01Max = center01 - otherObj.getRadius() * otherObj.getScale();
 
-	if (min01 > _edge01Max || max01 < _edge01Min) {
+	if (_other01Min > _edge01Max || _other01Max < _edge01Min) {
 		return false; // Projections aren't overlapping so no collision possible.
 	}
 
 	center03 = p_graphics->Vector2Dot(&_edge03, otherObj.getCenter());
-	min03 = center03 - otherObj.getRadius() * otherObj.getScale();
-	max03 = center03 - otherObj.getRadius() * otherObj.getScale();
+	_other03Min = center03 - otherObj.getRadius() * otherObj.getScale();
+	_other03Max = center03 - otherObj.getRadius() * otherObj.getScale();
 
-	if (min03 > _edge03Max || max03 < _edge03Min) {
+	if (_other03Min > _edge03Max || _other03Max < _edge03Min) {
 		return false; // Projections aren't overlapping so no collision possible.
 	}
 
@@ -329,6 +330,56 @@ bool GameObject::collideRotatedBoxCircle(GameObject& otherObj, VECTOR2& collisio
 		return collideCornerCircle(_corners[3], otherObj, collisionVector);
 	}
 
-	collisionVector = *otherObj.getCenter() - *getCenter();
+	if (_edge01Min < _other01Min) {
+		overlap01 = _edge01Max - _other01Min;
+		collisionVector = _corners[1] - _corners[0];
+	}
+	else {
+		overlap01 = _other01Max - _edge01Min;
+		collisionVector = _corners[0] - _corners[1];
+	}
+
+	if (_edge03Min < _other03Min) {
+		overlap03 = _edge03Max - _other03Min;
+		if (overlap03 < overlap01) {
+			collisionVector = _corners[3] - _corners[0];
+		}
+	}
+	else {
+		overlap03 = _other03Max - _edge03Min;
+		if (overlap03 < overlap01) {
+			collisionVector = _corners[0] - _corners[3];
+		}
+	}
+
 	return true;
+}
+
+void GameObject::bounce(GameObject& otherObj, VECTOR2& collisionVector) {
+	VECTOR2 velocityDiff = otherObj.getVelocity() - _velocity;
+	VECTOR2 collisionUnit = collisionVector;
+	Graphics::Vector2Normalize(&collisionUnit);
+
+	float collisionUnitDotVectorDiff = Graphics::Vector2Dot(&collisionUnit, &velocityDiff);
+	float massRatio = 2.0f;
+
+	if (this->getMass() != 0) {
+		massRatio *= (otherObj.getMass() / (this->getMass() + otherObj.getMass()));
+	}
+
+	if (massRatio < 0.1f) {
+		massRatio = 0.1f;
+	}
+
+	VECTOR2 cv;
+	int count = 10; // loop limit
+	do {
+		setX(getX() - collisionUnit.x);
+		setY(getY() - collisionUnit.y);
+		_rotatedBoxReady = false;
+		--count;
+	} while (this->isCollidingWith(otherObj, cv) && count);
+
+	//bounce
+	_deltaVelocity += ((massRatio * collisionUnitDotVectorDiff) * collisionUnit);
 }
