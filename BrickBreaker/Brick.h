@@ -13,6 +13,11 @@ enum class BrickType : int {
 	Indestructible
 };
 
+namespace brickNS {
+	const int WIDTH = 59;
+	const int HEIGHT = 18;
+}
+
 class Brick : public GameObject {
 private:
 	BrickType _type;

@@ -26,7 +26,7 @@ void BrickBreaker::initialize(HWND hwnd) {
 	_paddle = Paddle(this, &_paddleTexture);
 	_gameBall = Ball(this, &_ballTexture);
 
-	_gameBall.setVelocity(VECTOR2(100, 100));
+	_gameBall.setVelocity(VECTOR2(50, 50));
 
 	loadStagesFromFile();
 	p_currentStage = getStage(_currentStageId);
@@ -88,9 +88,18 @@ void BrickBreaker::render() {
 void BrickBreaker::calculateCollisions() {
 	VECTOR2 collisionVector;
 	if (_gameBall.isCollidingWith(_paddle, collisionVector)) {
-		OutputDebugString("Collision Found\n");
+		_gameBall.bounce(_paddle, collisionVector);
+		return;
 	}
-	return;
+
+	vector<Brick>::iterator iter = _bricks.begin();
+	while (iter != _bricks.end()) {
+		if (_gameBall.isCollidingWith(*iter, collisionVector)) {
+			_gameBall.bounce(*iter, collisionVector);
+			break;
+		}
+		++iter;
+	}
 }
 
 void BrickBreaker::releaseAll() {
@@ -220,13 +229,14 @@ Stage* BrickBreaker::getStage(int stageNumber) {
 }
 
 void BrickBreaker::renderLayout() {
+	_bricks.clear();
 	float startX = GAME_WIDTH * 0.10;
 	float brickWidth = (float)_currentLayout[0][0].getWidth();
 	float brickHeight = (float)_currentLayout[0][0].getHeight();
 	float brickX = startX;
 	float brickY = 0.0f;
-	for (UINT i = 0; i < 11; i++) {
-		for (UINT j = 0; j < 8; j++) {
+	for (int i = 0; i < brickBreakerNS::ROW_COUNT; i++) {
+		for (int j = 0; j < brickBreakerNS::COLUMN_COUNT; j++) {
 			Brick brick = _currentLayout[i][j];
 			if (brick.getType() != BrickType::NoBrick) {
 				brick.setX(brickX);
@@ -234,6 +244,7 @@ void BrickBreaker::renderLayout() {
 				brick.draw();
 			}
 			brickX += brickWidth;
+			_bricks.push_back(brick);
 		}
 		brickY += brickHeight;
 		brickX = startX;

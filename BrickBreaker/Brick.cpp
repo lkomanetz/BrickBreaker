@@ -29,14 +29,20 @@ Brick::~Brick() {
 }
 
 void Brick::initialize() {
-	_imageWidth = 59;
-	_imageHeight = 18;
+	_imageWidth = brickNS::WIDTH;
+	_imageHeight = brickNS::HEIGHT;
 	_numberOfColumns = 3;
-	_spriteData.width = _imageWidth;
-	_spriteData.height = _imageHeight;
-	_spriteData.rectangle.bottom = _imageHeight;
-	_spriteData.rectangle.right = _imageWidth;
+	_spriteData.width = brickNS::WIDTH;
+	_spriteData.height = brickNS::HEIGHT;
+	_spriteData.rectangle.bottom = brickNS::HEIGHT;
+	_spriteData.rectangle.right = brickNS::WIDTH;
+	_frameDelay = 0.0f;
 	_startFrame = 0;
 	_endFrame = 0;
 	_currentFrame = _startFrame;
+	_edge.top = -brickNS::HEIGHT / 2;
+	_edge.bottom = brickNS::HEIGHT / 2;
+	_edge.left = -brickNS::WIDTH / 2;
+	_edge.right = brickNS::WIDTH / 2;
+	_collisionType = CollisionType::RotatedBox;
 }

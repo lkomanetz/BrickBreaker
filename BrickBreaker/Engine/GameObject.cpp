@@ -383,3 +383,30 @@ bool GameObject::collideCornerCircle(VECTOR2 corner, GameObject& otherObj, VECTO
 
 	return false;
 }
+
+void GameObject::bounce(GameObject& otherObj, VECTOR2& collisionVector) {
+	VECTOR2 vectorDiff = otherObj.getVelocity() - _velocity;
+	VECTOR2 collisionUnitVector = collisionVector;
+	Graphics::Vector2Normalize(&collisionUnitVector);
+
+	float cUvDotVDiff = Graphics::Vector2Dot(&collisionUnitVector, &vectorDiff);
+	float massRatio = 2.0f;
+	float thisMass = this->getMass();
+	if (thisMass != 0) {
+		massRatio *= (otherObj.getMass() / (thisMass + otherObj.getMass()));
+	}
+
+	if (massRatio < 0.1f) {
+		massRatio = 01.f;
+	}
+
+	VECTOR2 cv;
+	int count = 10;
+	do {
+		setX(this->getX() - collisionUnitVector.x);
+		setY(this->getY() - collisionUnitVector.y);
+	} while (this->isCollidingWith(otherObj, cv) && count);
+
+	// Bounce
+	_deltaVelocity += ((massRatio * cUvDotVDiff) * collisionUnitVector);
+}

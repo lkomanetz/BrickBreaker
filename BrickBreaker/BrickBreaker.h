@@ -11,9 +11,15 @@
 #include "FileReader.h"
 #include <vector>
 
+namespace brickBreakerNS {
+	const int ROW_COUNT = 11;
+	const int COLUMN_COUNT = 8;
+}
+
 //TODO(Logan) -> Figure out a way to store a list of all game objects to iterate for updating.
 class BrickBreaker : public Game {
 private:
+	std::vector<Brick> _bricks;
 	Paddle _paddle;
 	Ball _gameBall;
 	TextureManager _ballTexture;

@@ -67,6 +67,7 @@ public:
 	void update(float frameTime);
 	virtual void performAi(float frameTime, GameObject& otherObj);
 	void addGravitationalForce(GameObject* otherObj, float frameTime);
+	void bounce(GameObject& otherObj, VECTOR2& collisionVector);
 
 	bool isActive() { return _active; }
 	bool isCollidingWith(GameObject& otherObj, VECTOR2& collisionVector);
@@ -82,6 +83,7 @@ public:
 	virtual UINT getHealth() const { return _health; }
 	virtual CollisionType getCollisionType() const { return _collisionType; }
 
+	virtual void setEdge(RECT rect) { _edge = rect; }
 	virtual void setHealth(UINT totalHealth) { _health = totalHealth; }
 	virtual void setVelocity(VECTOR2 velocity) { _velocity = velocity; }
 	virtual void setDeltaVelocity(VECTOR2 deltaVelocity) { _deltaVelocity = deltaVelocity; }
@@ -90,6 +92,7 @@ public:
 	virtual void setGravity(float gravity) { _gravity = gravity; }
 	virtual void setCollisionRadius(float radius) { _radius = radius; }
 	virtual void setCollisionCenter(VECTOR2 center) { _collisionCenter = center; }
+	virtual void setCollisionType(CollisionType type) { _collisionType = type; }
 };
 
 #endif

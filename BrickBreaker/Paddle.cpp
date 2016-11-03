@@ -17,7 +17,7 @@ Paddle::Paddle(Game* pGame, TextureManager* pTextureManager) {
 
 void Paddle::initialize() {
 	_imageWidth = 128;
-	_imageHeight = 28;
+	_imageHeight = 26;
 	_spriteData.width = _imageWidth;
 	_spriteData.height = _imageHeight;
 	_spriteData.x = (GAME_WIDTH * 0.5f) - (this->getWidth() * 0.5f);
@@ -33,7 +33,7 @@ void Paddle::initialize() {
 	_edge.bottom = _imageHeight / 2;
 	_edge.left = -_imageWidth / 2;
 	_edge.right = _imageWidth / 2;
-	_collisionType = CollisionType::Box;
+	_collisionType = CollisionType::RotatedBox;
 }
 
 void Paddle::update(float frameTime) {
